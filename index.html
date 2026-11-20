@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>白桦海研究所 // BIRCH SEA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06080c;--ink:#c9d6df;--dim:#5b6b78;--cy:#00e5ff;--mg:#ff2d78;--am:#ffb400;--ln:#1a2230;--wht:#e8f4ff}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:"Rajdhani","Noto Sans SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15.5px;overflow-x:hidden}
+#rain{position:fixed;inset:0;z-index:0;opacity:.12;pointer-events:none}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,.16) 2px 4px);opacity:.45}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;background:radial-gradient(ellipse at 20% -10%,rgba(0,229,255,.08),transparent 55%),radial-gradient(ellipse at 85% 110%,rgba(255,45,120,.07),transparent 55%);animation:ambient 14s ease-in-out infinite alternate}
+@keyframes ambient{to{transform:translateY(-18px)}}
+.sweep{position:fixed;left:0;right:0;height:120px;z-index:9997;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(0,229,255,.05),transparent);animation:sweep 9s linear infinite;top:-140px}
+@keyframes sweep{to{top:110%}}
+
+#boot{position:fixed;inset:0;z-index:20000;background:#04060a;overflow:hidden;transition:opacity 1s,visibility 1s;cursor:auto}#boot *{cursor:auto}
+#boot.gone{opacity:0;visibility:hidden}
+#crtline{position:absolute;top:50%;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 40px #9fdcff;animation:crtopen .7s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes crtopen{0%{transform:scaleX(0);opacity:0}30%{transform:scaleX(1);opacity:1}100%{transform:scaleX(1) scaleY(400);opacity:0}}
+.boot-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.boot-logo{position:absolute;top:26px;left:30px;display:flex;align-items:center;gap:12px}
+.boot-logo img{width:44px;filter:drop-shadow(0 0 10px rgba(0,229,255,.5))}
+.boot-logo span{font-family:"Share Tech Mono",monospace;font-size:10px;color:var(--cy);letter-spacing:3px;opacity:.8}
+#pct{font-family:"Orbitron",monospace;font-size:clamp(52px,9vw,88px);font-weight:700;color:var(--wht);letter-spacing:.06em;text-shadow:0 0 24px rgba(0,229,255,.7),0 0 80px rgba(0,229,255,.3)}
+#pct::after{content:"%";font-size:.45em;color:var(--cy)}
+#pbar{width:min(460px,80vw);height:14px;margin-top:18px;border:1px solid var(--ln);padding:2px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+#pfill{height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--mg));box-shadow:0 0 16px rgba(0,229,255,.6);transition:width .12s linear}
+#bootlog{width:min(560px,90vw);font-family:"Share Tech Mono",monospace;margin-top:26px;min-height:118px}
+.bootline{color:#3faebb;font-size:12.5px;letter-spacing:1px;opacity:.9}
+.bootline.ok::before{content:"[OK] ";color:#39d98a}
+.bootline.warn::before{content:"[!!] ";color:var(--mg)}
+#flash{position:absolute;inset:0;background:radial-gradient(circle,#fff,rgba(159,220,255,.9) 40%,transparent 75%);opacity:0;pointer-events:none}
+#flash.go{animation:flashgo 1s ease-out}
+@keyframes flashgo{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
+#welc{font-family:"Orbitron","Noto Sans SC",sans-serif;color:var(--wht);font-size:clamp(18px,4vw,34px);letter-spacing:.4em;text-align:center;margin-top:14px;opacity:0;text-shadow:0 0 20px #9fdcff,0 0 60px rgba(0,229,255,.55)}
+#welc.on{animation:welcin 1.1s cubic-bezier(.2,.9,.3,1.2) forwards}
+@keyframes welcin{0%{opacity:0;transform:scale(.92);filter:blur(8px)}60%{opacity:1;filter:blur(0)}100%{opacity:1;transform:scale(1)}}
+#welc small{display:block;font-size:11px;letter-spacing:.55em;color:var(--cy);margin-top:10px;font-family:"Share Tech Mono",monospace}
+#enter{margin-top:30px;padding:13px 48px;cursor:pointer;color:var(--cy);border:1px solid var(--cy);letter-spacing:7px;font-size:14px;background:rgba(0,229,255,.05);font-family:inherit;font-weight:600;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));transition:.25s;opacity:0;pointer-events:none}
+#enter.ready{opacity:1;pointer-events:auto;animation:epulse 2s ease-in-out infinite}
+@keyframes epulse{50%{box-shadow:0 0 28px rgba(0,229,255,.5)}}
+#enter:hover{background:var(--cy);color:#04060a;box-shadow:0 0 46px var(--cy)}
+
+.layout{display:flex;min-height:100vh;position:relative;z-index:1}
+aside{width:250px;flex-shrink:0;background:linear-gradient(180deg,rgba(10,14,21,.94),rgba(7,10,16,.94));backdrop-filter:blur(4px);border-right:1px solid var(--ln);padding:28px 0;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside::-webkit-scrollbar{width:4px}
+aside::-webkit-scrollbar-thumb{background:var(--cy)}
+.brand{padding:0 20px 20px;border-bottom:1px solid var(--ln);margin-bottom:12px;text-align:center}
+.brand img{width:140px;filter:drop-shadow(0 0 16px rgba(0,229,255,.45));animation:neon 3.4s ease-in-out infinite}
+@keyframes neon{0%,48%,52%,100%{filter:drop-shadow(0 0 16px rgba(0,229,255,.45))}50%{filter:drop-shadow(0 0 4px rgba(0,229,255,.15))}}
+.brand .t2{font-size:10px;color:var(--cy);letter-spacing:3px;margin-top:10px;font-family:"Share Tech Mono",monospace;opacity:.85}
+.brand .t2::after{content:"_";animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+nav a{display:flex;align-items:center;gap:10px;color:var(--dim);text-decoration:none;padding:9px 22px;font-size:13.5px;letter-spacing:2px;position:relative;font-weight:600;transition:.2s}
+nav a .idx{font-family:"Share Tech Mono",monospace;font-size:10px;color:var(--dim);border:1px solid var(--ln);padding:0 5px;line-height:16px;transition:.2s}
+nav a:hover{color:var(--cy);transform:translateX(4px)}
+nav a.on{color:var(--cy);background:linear-gradient(90deg,rgba(0,229,255,.12),transparent)}
+nav a.on::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cy);box-shadow:0 0 12px var(--cy)}
+nav a.on .idx{color:var(--bg);background:var(--cy);border-color:var(--cy)}
+#bgmBtn{margin:20px 20px 0;padding:8px 12px;width:calc(100% - 40px);cursor:pointer;border:1px solid var(--ln);color:var(--dim);background:transparent;font-family:"Share Tech Mono",monospace;font-size:11px;letter-spacing:2px;transition:.2s;display:flex;align-items:center;gap:8px}
+#bgmBtn:hover{border-color:var(--cy);color:var(--cy)}
+#bgmBtn .dot{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+#bgmBtn.playing .dot{background:var(--cy);box-shadow:0 0 8px var(--cy);animation:eq .9s ease-in-out infinite alternate}
+@keyframes eq{to{transform:scaleY(1.7)}}
+
+main{flex:1;max-width:1000px;padding:52px 56px 140px}
+section{margin-bottom:100px}
+.vol-head{position:relative;margin-bottom:34px;padding:26px 30px;border:1px solid var(--ln);overflow:hidden;background:linear-gradient(135deg,rgba(0,229,255,.06),transparent 45%,rgba(255,45,120,.06));clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px))}
+.vol-head::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(105deg,transparent,rgba(0,229,255,.14),transparent);animation:shine 5s ease-in-out infinite}
+@keyframes shine{0%,60%{left:-60%}100%{left:130%}}
+.vol-head .tag{font-family:"Share Tech Mono",monospace;font-size:10px;color:var(--mg);letter-spacing:4px;margin-bottom:8px}
+.vol-title{font-size:30px;font-weight:700;letter-spacing:9px;color:#fff;font-family:"Orbitron","Noto Sans SC",sans-serif}
+.vol-title .sep{color:var(--mg);text-shadow:0 0 12px var(--mg)}
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-t);position:absolute;left:0;top:0;width:100%;overflow:hidden}
+.glitch::before{color:var(--cy);animation:gl1 4s infinite steps(2);opacity:.75}
+.glitch::after{color:var(--mg);animation:gl2 4.7s infinite steps(2);opacity:.75}
+@keyframes gl1{0%,92%,100%{transform:none;clip-path:inset(0 0 100% 0)}93%{transform:translate(-3px,-2px);clip-path:inset(10% 0 55% 0)}95%{transform:translate(3px,1px);clip-path:inset(60% 0 10% 0)}}
+@keyframes gl2{0%,90%,100%{transform:none;clip-path:inset(0 0 100% 0)}91%{transform:translate(3px,2px);clip-path:inset(30% 0 40% 0)}94%{transform:translate(-2px,-1px);clip-path:inset(70% 0 5% 0)}}
+h2.ch{font-size:19px;margin:50px 0 22px;font-weight:700;letter-spacing:3px;color:var(--cy);padding:10px 16px;border-left:3px solid var(--cy);background:linear-gradient(90deg,rgba(0,229,255,.09),transparent);box-shadow:-4px 0 14px -4px rgba(0,229,255,.4);scroll-margin-top:20px}
+p.solo{margin:14px 0;text-align:justify}
+
+/* 小节分组卡:标题在卡顶,内容在卡内,不碎框 */
+.entry{margin:0 0 14px;border:1px solid var(--ln);background:linear-gradient(160deg,rgba(15,22,34,.55),rgba(8,11,17,.55));transition:.25s;scroll-margin-top:24px}
+.entry:hover{border-color:rgba(0,229,255,.4);box-shadow:0 4px 20px rgba(0,0,0,.45)}
+.entry-head{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--ln);background:linear-gradient(90deg,rgba(0,229,255,.07),transparent);font-family:"Share Tech Mono","Noto Sans SC",monospace;font-size:14px;letter-spacing:2px;color:var(--am);font-weight:700;cursor:pointer;user-select:none}
+.entry-head::before{content:"▸";color:var(--mg);transition:transform .25s;flex-shrink:0}
+.entry.open .entry-head::before{transform:rotate(90deg)}
+.entry-head .tag2{margin-left:auto;font-size:9.5px;color:var(--dim);letter-spacing:2px;font-weight:400;flex-shrink:0}
+.entry-body{padding:16px 20px}
+.entry-body p{margin:0 0 12px;text-align:justify;font-size:14.5px}
+.entry-body p:last-child{margin-bottom:0}
+img.ill{max-width:100%;display:block;margin:24px auto;border:1px solid rgba(0,229,255,.35);box-shadow:0 0 24px rgba(0,229,255,.15);clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));transition:.3s;cursor:zoom-in}
+img.ill:hover{box-shadow:0 0 44px rgba(0,229,255,.35);transform:scale(1.008)}
+#lightbox{position:fixed;inset:0;z-index:15000;background:rgba(4,6,10,.92);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:.3s;cursor:zoom-out}
+#lightbox.on{opacity:1;visibility:visible}
+#lightbox img{max-width:92vw;max-height:90vh;border:1px solid rgba(0,229,255,.4);box-shadow:0 0 60px rgba(0,229,255,.25)}
+
+/* 城市终端 */
+.mapterm{margin:10px 0 44px;border:1px solid var(--ln);overflow:hidden;background:#0a0d13;clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px))}
+.mapterm .mh{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--ln);font-family:"Share Tech Mono",monospace;font-size:11px;color:var(--cy);letter-spacing:3px;background:linear-gradient(90deg,rgba(0,229,255,.07),transparent)}
+.mapterm .mh .live{width:7px;height:7px;border-radius:50%;background:var(--mg);box-shadow:0 0 8px var(--mg);animation:blink 1.4s infinite}
+.mapview{position:relative;overflow:hidden}
+.mapview img{width:100%;display:block;opacity:.85;filter:contrast(1.05) saturate(.8)}
+.mapview::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.12) 3px 4px)}
+.pin{position:absolute;transform:translate(-50%,-100%);cursor:pointer;z-index:5}
+.pin i{display:block;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid var(--cy);filter:drop-shadow(0 0 6px var(--cy));margin:0 auto;animation:bob 2.2s ease-in-out infinite}
+.pin i::after{content:"";position:absolute;left:-3px;top:-14px;width:6px;height:6px;border-radius:50%;background:var(--cy)}
+@keyframes bob{50%{transform:translateY(-4px)}}
+.pin span{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;letter-spacing:1px;color:var(--wht);background:rgba(6,10,16,.85);border:1px solid rgba(0,229,255,.5);padding:1px 7px;opacity:0;transition:.2s;pointer-events:none}
+.pin:hover span{opacity:1}
+.pin.hot i{border-top-color:var(--mg);filter:drop-shadow(0 0 8px var(--mg))}
+.pin.hot i::after{background:var(--mg)}
+footer{color:var(--dim);font-size:11px;margin-top:90px;letter-spacing:3px;border-top:1px solid var(--ln);padding-top:20px;font-family:"Share Tech Mono",monospace}
+#bar{position:fixed;top:0;left:0;height:2px;width:0;z-index:10000;background:linear-gradient(90deg,var(--cy),var(--mg));box-shadow:0 0 8px var(--cy)}
+.fx{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.fx.in{opacity:1;transform:none}
+@media(max-width:900px){
+.layout{flex-direction:column}
+aside{width:100%;height:auto;position:static;border-right:none;border-bottom:1px solid var(--ln)}
+main{padding:30px 18px 90px}
+.vol-title{font-size:22px;letter-spacing:6px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* 半屏分栏 */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;margin:24px 0}
+.split img.ill{margin:0}
+.split .split-txt{align-self:center;padding:6px 4px}
+@media(max-width:820px){.split{grid-template-columns:1fr}}
+
+/* pin点击波纹 */
+.pin i{position:relative}
+.pin::after{content:'';position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:50%;border:1px solid var(--cy);opacity:0;pointer-events:none}
+.pin.clicked::after{animation:ripple .8s ease-out}
+@keyframes ripple{0%{width:6px;height:6px;margin:-3px;opacity:1}100%{width:60px;height:60px;margin:-30px;opacity:0}}
+
+/* pin脉冲微动 */
+.pin i{animation:pinpulse 3s ease-in-out infinite}
+@keyframes pinpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+
+/* 章节标题扫光 */
+section h2{position:relative;overflow:hidden}
+section h2::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,rgba(0,229,255,.18) 50%,transparent 60%);transform:translateX(-100%);animation:sweep 7s linear infinite}
+@keyframes sweep{0%{transform:translateX(-100%)}55%{transform:translateX(100%)}100%{transform:translateX(100%)}}
+
+/* 图片入场视差 */
+img.ill{will-change:transform}
+
+/* 人物志配图 杂志式 */
+img.ill.half{max-width:72%;border:none;box-shadow:none;clip-path:none;filter:drop-shadow(0 0 30px rgba(0,229,255,.18))}
+img.ill.half:hover{transform:scale(1.015)}
+@media(max-width:820px){img.ill.half{max-width:92%}}
+
+/* 人物志 文图双栏 */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center;margin:34px 0}
+.duo .duo-img img{width:100%;display:block}
+.duo .duo-txt p{margin:0 0 16px}
+.duo .duo-txt p:last-child{margin:0}
+@media(max-width:820px){.duo{grid-template-columns:1fr;gap:14px}}
+
+/* 全屏点击故障波纹 */
+.clickfx{position:fixed;pointer-events:none;z-index:400;border:1px solid var(--cy);border-radius:50%;animation:bigripple 1s ease-out forwards;box-shadow:0 0 30px rgba(0,229,255,.5),inset 0 0 30px rgba(0,229,255,.3)}
+@keyframes bigripple{0%{width:14px;height:14px;margin:-7px;opacity:1}100%{width:340px;height:340px;margin:-170px;opacity:0}}
+.clickline{position:fixed;pointer-events:none;z-index:400;height:2px;background:linear-gradient(90deg,transparent,var(--cy),transparent);animation:linez .5s ease-out forwards}
+@keyframes linez{0%{width:0;left:var(--x);opacity:1}100%{width:50vw;left:calc(var(--x) - 25vw);opacity:0}}
+
+/* 数据碎片 */
+.shard{display:inline-block;padding:0 6px;color:var(--cy);border:1px dashed rgba(0,229,255,.5);cursor:pointer;font-size:.82em;animation:shardblink 1.6s steps(2) infinite;user-select:none}
+.shard:hover{background:rgba(0,229,255,.15)}
+
+/* --- 档案终端 --- */
+#arc{margin:20px 0}
+#arcTerm{border:1px solid rgba(0,229,255,.3);background:rgba(2,6,10,.7);padding:14px}
+#arcLog{min-height:80px;max-height:200px;overflow-y:auto;font-family:var(--fm);font-size:12px;line-height:1.8;color:#9ecdd4}
+#arcLog .ln{white-space:pre-wrap;word-break:break-all}
+#arcLog .ln.cmd{color:var(--cy)}
+#arcLog .ln.cmd::before{content:'> ';color:#39d98a}
+#arcLog .ln.ok{color:#39d98a}
+#arcLog .ln.err{color:var(--mg)}
+#arcLog .ln.sys{color:rgba(158,240,255,.5)}
+#arcPrompt{display:flex;align-items:center;gap:8px;margin-top:10px;border-top:1px dashed rgba(0,229,255,.2);padding-top:10px}
+#arcPrompt .ps{color:#39d98a;font-family:var(--fm);font-size:14px}
+#arcIn{flex:1;background:transparent;border:none;outline:none;color:#d8f4f8;font-family:var(--fm);font-size:13px;letter-spacing:1px}
+#arcGo{background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.4);color:var(--cy);font-family:var(--fm);font-size:11px;letter-spacing:2px;padding:6px 14px;cursor:pointer;transition:.2s}
+#arcGo:hover{background:rgba(0,229,255,.18)}
+#arcList{border:1px solid rgba(0,229,255,.2);background:rgba(2,6,10,.5);padding:10px;font-family:var(--fm);font-size:11px}
+.arcitem{padding:8px 10px;cursor:pointer;color:#7fb8c0;letter-spacing:1px;border-left:2px solid transparent;transition:.2s;user-select:none}
+.arcitem:hover{color:var(--cy);border-left-color:var(--cy);background:rgba(0,229,255,.05)}
+.arcitem.on{color:var(--am);border-left-color:var(--am)}
+.arcitem .no{color:#3a6b72;margin-right:8px}
+/* 档案详情 */
+#arcView{display:none;border:1px solid rgba(0,229,255,.35);background:rgba(2,6,10,.85);margin-top:14px;width:100%}
+#arcView.on{display:block;animation:fadein .4s}
+#avHead{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid rgba(0,229,255,.25);position:relative}
+#avName{font-family:var(--fm);font-size:16px;letter-spacing:4px;color:var(--cy);font-weight:700}
+#avTag{font-size:10px;letter-spacing:2px;color:rgba(158,240,255,.5);border:1px dashed rgba(0,229,255,.3);padding:3px 10px}
+#avClose{position:absolute;right:16px;color:var(--cy);cursor:pointer;font-size:20px;padding:4px}
+#avBody{padding:20px 24px;font-size:14px;line-height:2;color:#c5dde2}
+#avBody p{margin-bottom:14px}
+#avBody .avimg{max-width:280px;display:block;margin:0 auto 18px;border:1px solid rgba(0,229,255,.3);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+
+.shard.got{color:#3a6b72;border-color:#2a4a50;animation:none;text-decoration:line-through;cursor:default}
+@keyframes shardblink{50%{opacity:.35}}
+
+/* 碎片收集进度+隐藏档案 */
+#shardhud{position:fixed;right:18px;bottom:18px;z-index:390;font-family:var(--fm);font-size:11px;letter-spacing:2px;color:var(--cy);border:1px solid rgba(0,229,255,.4);padding:10px 14px;background:rgba(4,8,12,.85);display:none}
+#shardhud.show{display:block}
+#secret{position:fixed;inset:0;z-index:410;background:rgba(3,6,10,.94);display:none;align-items:center;justify-content:center;padding:24px}
+#secret.on{display:flex}
+#secret .box{max-width:640px;border:1px solid var(--cy);padding:38px 34px;background:#050b10;box-shadow:0 0 60px rgba(0,229,255,.25);font-family:var(--fm);color:var(--tx);font-size:13px;line-height:2.1}
+#secret .box h3{color:var(--cy);letter-spacing:4px;font-weight:400;margin:0 0 18px}
+#secret .close{margin-top:22px;display:inline-block;border:1px solid rgba(0,229,255,.5);padding:8px 22px;color:var(--cy);cursor:pointer;letter-spacing:3px}
+
+/* 悬浮折叠目录 */
+#fab{position:fixed;left:18px;bottom:18px;z-index:395;width:52px;height:52px;border-radius:50%;border:1px solid var(--cy);background:rgba(4,8,12,.9);color:var(--cy);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:11px;letter-spacing:1px;box-shadow:0 0 24px rgba(0,229,255,.35);transition:.3s}
+#fab:hover{box-shadow:0 0 44px rgba(0,229,255,.6)}
+#fabmenu{position:fixed;left:18px;bottom:82px;z-index:395;width:230px;max-height:62vh;overflow:auto;border:1px solid rgba(0,229,255,.4);background:rgba(3,7,11,.96);padding:12px;display:none;backdrop-filter:blur(6px)}
+#fabmenu.on{display:block;animation:fabin .25s ease-out}
+@keyframes fabin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#fabmenu a{display:block;padding:9px 10px;font-family:var(--fm);font-size:12px;letter-spacing:2px;color:var(--tx2);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.05)}
+#fabmenu a:hover{color:var(--cy);padding-left:16px}
+#fabmenu .mg{font-size:10px;color:var(--cy);letter-spacing:3px;padding:10px 10px 5px;opacity:.7}
+
+/* 锁定条目 */
+#institute{display:none}
+#institute.unlocked{display:block;animation:instin 1s ease-out}
+@keyframes instin{from{opacity:0;filter:blur(8px)}to{opacity:1;filter:none}}
+/* 待解锁提示 */
+#insthint{font-family:var(--fm);font-size:12px;letter-spacing:3px;color:rgba(0,229,255,.55);border:1px dashed rgba(0,229,255,.35);padding:16px 22px;margin:30px auto;width:fit-content;cursor:default}
+#insthint.done{display:none}
+
+/* 半透明弹窗 */
+#sbox{position:fixed;inset:0;z-index:420;display:none;align-items:center;justify-content:center;background:rgba(3,6,10,.55);backdrop-filter:blur(4px)}
+#sbox.on{display:flex}
+#sbox .panel{width:min(560px,88vw);background:rgba(6,12,18,.82);border:1px solid rgba(0,229,255,.55);box-shadow:0 0 50px rgba(0,229,255,.22),inset 0 0 40px rgba(0,229,255,.05);padding:30px 30px 24px;font-family:var(--fm);color:var(--tx);position:relative;animation:pop .28s ease-out}
+@keyframes pop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
+#sbox .panel h4{margin:0 0 14px;color:var(--cy);font-weight:400;letter-spacing:4px;font-size:13px}
+#sbox .panel p{font-size:12.5px;line-height:2.1;margin:0 0 10px}
+#sbox .x{position:absolute;top:10px;right:14px;color:var(--cy);cursor:pointer;font-size:18px;line-height:1;padding:4px}
+#sbox .x:hover{color:#fff}
+
+/* 自定义光标：青色菱形准星 */
+html,body,a,button,.pin,.shard{cursor:none}
+#cur{position:fixed;z-index:999;width:18px;height:18px;border:1px solid var(--cy);transform:rotate(45deg);pointer-events:none;mix-blend-mode:screen;box-shadow:0 0 12px rgba(0,229,255,.7);transition:transform .12s}
+#cur::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;background:var(--cy)}
+#cur.big{transform:rotate(45deg) scale(1.7)}
+@media(max-width:820px){#cur{display:none}html,body,a,button,.pin,.shard{cursor:auto}}
+.flydot{position:fixed;z-index:60000;width:14px;height:14px;pointer-events:none;color:var(--cy);font-size:14px;text-shadow:0 0 8px var(--cy);transition:all .9s cubic-bezier(.5,-.1,.3,1)}
+#sx{transition:opacity 1.4s}
+
+#sq{font-size:12px;color:rgba(0,229,255,.85);letter-spacing:1px;margin:14px 0 8px}
+#sin{width:100%;background:rgba(0,20,28,.6);border:1px solid rgba(0,229,255,.5);color:var(--tx);font-family:var(--fm);font-size:13px;padding:9px 12px;outline:none;letter-spacing:2px}
+#sin:focus{border-color:var(--cy);box-shadow:0 0 14px rgba(0,229,255,.3)}
+#smsg{margin-top:12px;font-size:11px;letter-spacing:2px;color:rgba(158,240,255,.55);min-height:16px;transition:opacity 1s}
+#serr{margin-top:10px;font-size:11px;letter-spacing:2px;color:rgba(255,60,80,.8);min-height:15px}
+#sbox .panel.shake{animation:shk .35s}
+@keyframes shk{25%{transform:translateX(-7px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
+/* ===== 档案终端新UI ===== */
+#arcMain{border:1px solid rgba(0,229,255,.25);background:rgba(2,6,10,.7);padding:16px}
+.ah-t{font-family:var(--fm);font-size:11px;color:rgba(158,240,255,.5);letter-spacing:3px;margin-bottom:14px}
+.ah-back{cursor:pointer;color:#39d98a;margin-left:12px}
+.ah-back:hover{text-decoration:underline}
+.ah-opt{font-family:var(--fm);font-size:13px;color:#9ecdd4;padding:14px 12px;border:1px solid rgba(0,229,255,.15);margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .2s}
+.ah-opt:hover{border-color:var(--cy);background:rgba(0,229,255,.05);color:#d8f4f8}
+.ah-key{color:#39d98a;font-size:11px}
+.ah-arr{margin-left:auto;color:var(--cy)}
+#arcDirList,#arcResults{display:flex;flex-direction:column;gap:6px}
+.arcitem{font-family:var(--fm);font-size:12px;color:#9ecdd4;padding:10px 12px;border:1px solid rgba(0,229,255,.12);cursor:pointer;display:flex;align-items:center;gap:10px;flex-wrap:wrap;transition:all .2s}
+.arcitem:hover{border-color:var(--cy);color:#d8f4f8;background:rgba(0,229,255,.05)}
+.arcitem.on{border-color:#39d98a;color:#d8f4f8}
+.arcitem .no{color:#39d98a;font-size:10px}
+.arcitem.via{border-style:dashed}
+.via-t{font-size:10px;color:rgba(255,150,100,.8);margin-left:auto}
+.an-c{color:var(--mg);cursor:pointer;text-decoration:underline;margin-left:4px}
+.arc-none{padding:30px 10px;text-align:center;font-family:var(--fm)}
+.an-t{color:var(--mg);font-size:13px;letter-spacing:2px;margin-bottom:12px}
+.an-w{font-size:11px;color:rgba(158,240,255,.6)}
+#arcSearchBox{display:flex;align-items:center;gap:8px;border-bottom:1px dashed rgba(0,229,255,.2);padding-bottom:10px;margin-bottom:12px}
+#arcSearchBox .ps{color:#39d98a;font-family:var(--fm)}
+#arcGo{background:transparent;border:1px solid rgba(0,229,255,.3);color:var(--cy);font-family:var(--fm);font-size:10px;padding:4px 10px;cursor:pointer;letter-spacing:1px}
+#arcGo:hover{border-color:var(--cy);background:rgba(0,229,255,.08)}
+#avWarn{font-family:var(--fm);font-size:11px;color:rgba(255,150,100,.85);padding:8px 12px;border-bottom:1px dashed rgba(255,150,100,.3);background:rgba(60,20,10,.3)}
+#avWarn #avContact{color:var(--mg);cursor:pointer;text-decoration:underline;margin-left:4px}
+.cpop{position:fixed;bottom:30px;right:30px;z-index:9999;background:rgba(2,6,10,.95);border:1px solid var(--mg);padding:14px 18px;font-family:var(--fm);opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none}
+.cpop.on{opacity:1;transform:translateY(0)}
+.cp-t{font-size:10px;color:var(--mg);letter-spacing:2px;margin-bottom:6px}
+.cp-b{font-size:12px;color:#9ecdd4}
+</style>
+</head><body>
+<canvas id="rain"></canvas>
+<div class="sweep"></div>
+<div id="bar"></div>
+
+<div id="boot">
+<div id="crtline"></div>
+<div class="boot-logo"><img src="assets/logo_glow.png"><span>BIRCH SEA INSTITUTE</span></div>
+<div class="boot-inner">
+<div id="pct">0</div>
+<div id="pbar"><div id="pfill"></div></div>
+<div id="bootlog"></div>
+<div id="welc">WELCOME TO BIRCH SEA<small>// INSTITUTE ARCHIVE · 生·者说 //</small></div>
+<button id="enter">接 入 &gt;&gt;</button>
+</div>
+<div id="flash"></div>
+</div>
+
+<div id="lightbox"><img src=""></div>
+
+<div class="layout">
+<aside>
+<div class="brand">
+<img src="assets/logo_glow.png" alt="白桦海研究所">
+<div class="t2">BIRCH SEA INSTITUTE // ARCHIVE</div>
+</div>
+<nav>
+<a href="#v1"><span class="idx">01</span>序</a>
+<a href="#v2"><span class="idx">02</span>卷一 · 世界</a>
+<a href="#v3"><span class="idx">03</span>卷二 · 秩序</a>
+<a href="#v4"><span class="idx">04</span>卷四 · 人</a>
+<a href="#v5"><span class="idx">05</span>卷五 · 散页</a>
+<a href="#v6"><span class="idx">06</span>卷六 · 戏言</a>
+<a href="#v7"><span class="idx">07</span>卷末</a>
+
+</nav>
+<button id="bgmBtn"><span class="dot"></span><span id="bgmTxt">BGM // OFF</span></button>
+<audio id="bgm" src="assets/bgm.mp3" loop preload="auto"></audio>
+</aside>
+<main>
+<section id="v1">
+<div class="vol-head">
+<div class="tag">// ARCHIVE_01 // DECRYPTED</div>
+<div class="vol-title"><span class="glitch" data-t="序">序</span></div>
+</div>
+<p class="solo fx">设定集</p>
+<p class="solo fx">伪科学架空 · 赛博朋克 · 末日废土</p>
+</section>
+<section id="v2">
+<div class="vol-head">
+<div class="tag">// ARCHIVE_02 // DECRYPTED</div>
+<div class="vol-title"><span class="glitch" data-t="卷一 · 世界">卷一 <span class="sep">·</span> 世界</span></div>
+</div>
+<h2 class="ch fx" id="c2_0">第一章 · 总述与天灾</h2>
+<div class="entry fx" id="e_潮汐锁定" data-name="潮汐锁定">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">潮汐锁定<span class="tag2">SEC_001</span></div>
+<div class="entry-body"><p>这里其实是一个伪科学。潮汐锁定是一个长达几百万年甚至几亿年的漫长的过程，这边我的架空世界的设定是在百年内快速完成的，并且在这个故事背景中并没有对末日复杂的气流系统多做假设，当个纯架空来看。总之在潮汐锁定的前提下，地球的其中一面只能永远面对太阳，于是地球被分为了昼半球和夜半球，在昼夜交替的分界线上是一个狭长的宜居带，幸存的人就在这里筑起了一个狭长的城市。</p></div>
+</div>
+<div class="entry fx" id="e_宜居带的移动" data-name="宜居带的移动">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">宜居带的移动<span class="tag2">SEC_002</span></div>
+<div class="entry-body"><p>想象地球是一个苹果，用一根牙签穿过苹果，但是这根牙签不是直直插的，是歪了一点，大概歪了23度。现在桌上放着一盏台灯，这是太阳。苹果不自转了，永远同一面对着台灯，这就是潮汐锁定。面对灯的那一面永远亮，背对灯的那一面永远暗。中间那条明暗交界的线就是宜居带，但是苹果还在绕着台灯转圈。就是公转还在继续。因为牙签是歪的，所以苹果绕台灯转一圈的过程中，那条明暗交界线的位置会稍微上下移动一点。夏天的时候往北偏一点，冬天的时候往南偏一点。所以宜居带不是完全固定的，它会像一条蛇一样，在一年之中缓慢地南北晃动。幅度不大，但对于住在宜居带边缘的人来说，这个晃动可能就是生死的区别，而城市就建在这里，从赤道开始往两端延伸，这意味着往中心的区域气候更稳定，这里是靠近赤道的区域，是一个比较宽的宜居带，而越往两端宜居带越窄，这决定了往中心的区域会是富人区，而往两边就到了平民窟，这也意味着城市的两端偶尔会经历温度异常，每次来的时候边缘的居民要往城市中心方向撤一段距离。这个过程就像候鸟迁徙一样，所以他们管这个周期性的活动叫做“迁徙”。</p></div>
+</div>
+<div class="entry fx" id="e_复杂的气候环境" data-name="复杂的气候环境">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">复杂的气候环境<span class="tag2">SEC_003</span></div>
+<div class="entry-body"><p>昼半球永远被太阳烤着，地表温度极高，空气受热膨胀上升。夜半球永远没有阳光，地表温度极低，空气冷却下沉。这两边的温差是几百度，这意味着宜居带上永远有风，不是普通的风，是热空气和冷空气在交界线上剧烈碰撞产生的、永不停歇的风暴带。城市就建在这条风暴带上，本身有建筑遮挡，有防风结构，内部的人感受不到最极端的风力。但城市的边缘呢？城市外面呢？出了城就是风。不是刮一阵停一阵的风，是永远在吹的、没有尽头的风。方向大致固定——从昼半球吹向夜半球，因为热空气上升后向夜半球方向流动，冷空气从地面向昼半球方向补充，这是一个永恒的大气环流。所以城外的人面对的不只是温度问题，是你站都站不稳。风会携带昼半球的热沙和夜半球的冰晶，宜居带上的降水可能不是正常的雨，而是一种混合着沙尘和冰粒的东西。然后还有一个东西——声音，永恒的风会产生永恒的声音。城外不是安静的，城外是吵的，是一种低沉的、持续的、永远不停的呼啸声。这意味着长时间待在城外的人回来之后会有一个生理反应——耳鸣。在持续的风暴噪音中待了几天之后，突然回到相对安静的城市里，耳朵会适应不了，他们会持续听到一种不存在的嗡嗡声。老练的城外探索者可能常年有这个症状，你回来了，但你的耳朵还留在外面。住在城市边缘的人可能已经习惯了这个背景音，就像住在铁路边的人习惯了火车声，但第一次走到城市边缘的人会被这个声音吓到。这就是为什么没有人能走出去——外面什么都太多了。太热，太冷，太吵，风太大，你看不清前方，你听不见同伴的声音，你的徒步工具在风沙中被磨损，你的方向感在永恒的白昼或永恒的黑夜中消失，能挣扎的只有最靠近城区的那一小块地方的人。</p><p>再远一点的人？没有人知道，这是这个世界的物理现实。信息传不出来，人走不回来，连声音都被风吞掉了。</p><p>同时，基于恶劣的气候条件，城内的人走不出太远，信号切断了，科技在进步但是文明在倒退，他们不知道星球的另一端有什么，可能有人类，可能没有，星球的另一端，在那里的宜居带上是否还有存活的人类就成为了一个谜。<span class="shard" data-id="4">◇</span></p></div>
+</div>
+<div class="entry fx" id="e_四代遗忘现象" data-name="四代遗忘现象">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">四代遗忘现象<span class="tag2">SEC_004</span></div>
+<div class="entry-body"><p>我想能源枯竭，植被衰退，物种灭绝之类的问题应该开始于更早更早之前，但是潮汐锁定是在当前时间线前一百年初见端倪，大约经过了四代人的更替，数据验证人类的社会记忆平均存续80-100年，在一百年后的今天地球上生活着的大部分人已经遗忘了自己祖辈的生活，包括食物，遍布植被的风景，秩序井然的社会，类比现实中消失的星空，我们这一代人出生开始看见的夜晚就是一片漆黑，已经很难想象上一代人口中漫天星海的夜空是什么样的了。</p><p>值得单独一提的点是世界末日后人口骤减，反而让能源枯竭这个问题变得没那么急迫了。</p></div>
+</div>
+<div class="entry fx" id="e_科技树" data-name="科技树">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">科技树<span class="tag2">SEC_005</span></div>
+<div class="entry-body"><p>我想这个世界观看起来可能还存在很多漏洞，比如说有这么多的时间为什么不建立更多的避难所，为什么不想更多的方法来对抗天灾。</p><p>一个很简单的原因就是做不到，一方面是能力不足，这个世界的科技水平其实是达不到真正意义上的赛博朋克城市的，很多看起来比较先进的技术，譬如人体改造，实际上都还比较粗糙，是人类面对生存危机被逼出来的，死亡率非常高。还有一方面就是这个世界的科技树点的还挺歪，像实验室已经开始研究人体改造技术，医疗舱和仿生人了，外面的黑帮还在拿最普通的热武器火并。</p></div>
+</div>
+<h2 class="ch fx" id="c2_1">第二章 · 城市结构</h2>
+<div class="mapterm fx">
+<div class="mh"><span class="live"></span>SECTOR MAP // TIDE-LOCK CITY // CLICK PIN TO JUMP</div>
+<div class="mapview"><img src="assets/img/map.jpg"><div class="pin" style="left:54.5%;top:10.5%"  data-n="农业区"><i></i><span>农业区</span></div><div class="pin" style="left:63.5%;top:16.0%"  data-n="医疗区"><i></i><span>医疗区</span></div><div class="pin" style="left:90.5%;top:17.0%"  data-n="农业区"><i></i><span>农业区</span></div><div class="pin" style="left:76.5%;top:21.5%"  data-n="市中心"><i></i><span>市中心·娱乐区</span></div><div class="pin" style="left:35.5%;top:23.0%"  data-n="教堂"><i></i><span>教堂</span></div><div class="pin" style="left:33%;top:31.5%"  data-n="花园"><i></i><span>花园</span></div><div class="pin" style="left:41.5%;top:29.5%"  data-n="边陲小镇"><i></i><span>边陲小镇</span></div><div class="pin" style="left:18.5%;top:29.0%"  data-n="农业区"><i></i><span>农业区</span></div><div class="pin hot" style="left:42%;top:43%" data-n="地下灰色管辖区"><i></i><span>地下灰色管辖区</span></div><div class="pin" style="left:31.0%;top:46.0%"  data-n="黑市"><i></i><span>黑市</span></div><div class="pin hot" style="left:75.5%;top:49%" data-n="暗巷"><i></i><span>暗巷</span></div><div class="pin" style="left:62.0%;top:55.5%"  data-n="农业区"><i></i><span>农业区</span></div><div class="pin" style="left:9.0%;top:57.0%"  data-n="蜂箱"><i></i><span>蜂箱</span></div><div class="pin" style="left:23.5%;top:67.0%"  data-n="生产区"><i></i><span>生产区</span></div><div class="pin" style="left:37.0%;top:70.0%"  data-n="蜂箱"><i></i><span>蜂箱</span></div><div class="pin" style="left:11.0%;top:80.0%"  data-n="能源区"><i></i><span>能源区</span></div></div>
+</div>
+</div>
+<p class="solo fx">城市内部分区：</p>
+<div class="entry fx" id="e_城市结构" data-name="城市结构">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">城市结构<span class="tag2">LOC_006</span></div>
+<div class="entry-body"><p>外观上来看这是一个以赤道为中心，往两极发散的狭长的城市，垂直来看分为地上，地面，地下一层，地下二层四层，水平看分为中心和两端，下层为贫，上层为富。</p></div>
+</div>
+<p class="solo fx">地上层：</p>
+<div class="entry fx" id="e_市中心" data-name="市中心">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">市中心<span class="tag2">LOC_007</span></div>
+<div class="entry-body"><p>位于地上层的中心区</p></div>
+</div>
+<div class="entry fx" id="e_娱乐区" data-name="娱乐区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">娱乐区<span class="tag2">LOC_008</span></div>
+<div class="entry-body"><p>位于地上层的中心区，紧邻市中心，位于市中心北段</p></div>
+</div>
+<div class="entry fx" id="e_医疗区" data-name="医疗区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">医疗区<span class="tag2">LOC_009</span></div>
+<div class="entry-body"><p>位于地上层的中心区，在市中心外围的北部</p></div>
+</div>
+<div class="entry fx" id="e_农业区" data-name="农业区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">农业区<span class="tag2">LOC_010</span></div>
+<div class="entry-body"><p>位于地上层的过渡带到边缘，从中心区外缘向两端延伸</p></div>
+</div>
+<p class="solo fx">地面层：</p>
+<div class="entry fx" id="e_农业区" data-name="农业区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">农业区<span class="tag2">LOC_011</span></div>
+<div class="entry-body"><p>位于地面层的过渡带到边缘，从中心区外缘向两端延伸，与地上层的农业区上下对应</p></div>
+</div>
+<div class="entry fx" id="e_暗巷" data-name="暗巷">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">暗巷<span class="tag2">LOC_012</span></div>
+<div class="entry-body"><p>位于地面层，呈狭长带状分布，贯穿整个地面层，俯瞰近似蛇形</p></div>
+</div>
+<div class="entry fx" id="e_黑市" data-name="黑市">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">黑市<span class="tag2">LOC_013</span></div>
+<div class="entry-body"><p>位于地面层中心西部，从市中心隐秘入口进入</p></div>
+</div>
+<div class="entry fx" id="e_地下灰色管辖区" data-name="地下灰色管辖区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">地下灰色管辖区<span class="tag2">LOC_014</span></div>
+<div class="entry-body"><p>位于地下一层的中心区与过渡带交界处的上方夹层，介于地面层与地下一层之间，从暗巷的隐秘入口进入</p></div>
+</div>
+<div class="entry fx" id="e_边陲小镇" data-name="边陲小镇">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">边陲小镇<span class="tag2">LOC_015</span></div>
+<div class="entry-body"><p>位于地面层中心的最东端</p></div>
+</div>
+<div class="entry fx" id="e_教堂" data-name="教堂">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">教堂<span class="tag2">LOC_016</span></div>
+<div class="entry-body"><p>位于地面层的最东端，边陲小镇的镇内偏向东方的位置</p></div>
+</div>
+<div class="entry fx" id="e_花园" data-name="花园">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">花园<span class="tag2">LOC_017</span></div>
+<div class="entry-body"><p>位于地面层的最东端，边陲小镇中心的广场上</p></div>
+</div>
+<p class="solo fx">地下一层：</p>
+<div class="entry fx" id="e_生产区" data-name="生产区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">生产区<span class="tag2">LOC_018</span></div>
+<div class="entry-body"><p>位于地下一层的中心区与过渡带，从中心区向两端边缘延伸</p></div>
+</div>
+<div class="entry fx" id="e_蜂箱" data-name="蜂箱">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">蜂箱<span class="tag2">LOC_019</span></div>
+<div class="entry-body"><p>位于地下一层的两端边缘，从过渡带与两端边缘的交界处一直延伸到最端点</p></div>
+</div>
+<p class="solo fx">地下二层：</p>
+<div class="entry fx" id="e_能源区" data-name="能源区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">能源区<span class="tag2">LOC_020</span></div>
+<div class="entry-body"><p>位于地下二层，从中心区一直延伸到两端边缘，覆盖整个城市的地下最底层，相较于其他三层面积较小</p></div>
+</div>
+<img class="ill fx" src="assets/img/img_01.jpg" loading="lazy">
+<p class="solo fx">商业性区块：</p>
+<div class="entry fx" id="d_市中心" data-name="市中心">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">市中心<span class="tag2">LOC_021</span></div>
+<div class="entry-body"><p>资本流通的心脏，繁华的商业中心，依旧过着纸醉金迷的现代生活。</p></div>
+</div>
+<div class="entry fx" id="d_娱乐区" data-name="娱乐区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">娱乐区<span class="tag2">LOC_022</span></div>
+<div class="entry-body"><p>由落日管辖。夜店与酒吧，性偶俱乐部与情色剧院，竞技场与地下拳赛，无数人沉浸其中，享受感官的超负荷体验</p></div>
+</div>
+<div class="entry fx" id="d_黑市" data-name="黑市">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">黑市<span class="tag2">LOC_023</span></div>
+<div class="entry-body"><p>某种意义上算是城内的政治中心。在旧秩序崩溃的真空期，法律与道德尚未建立时，话语权往往掌握在把握资源的人手中，新的权力并</p></div>
+</div>
+<p class="solo fx">非在阳光下建立，而是在阴影中野蛮生长。</p>
+<img class="ill fx" src="assets/img/img_02.jpg" loading="lazy">
+<p class="solo fx">功能性区块</p>
+<div class="entry fx" id="d_生产区" data-name="生产区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">生产区<span class="tag2">LOC_024</span></div>
+<div class="entry-body"><p>由落日管辖。占据着旧时代的工厂遗址和后来加建的巨大棚户厂房。整体是一个层高极高的开阔空间，管道和线缆像藤蔓一样缠绕着一切。这里专注于生产义体零部件、武器弹药、能量电池、以及维修整个城市基础设施的替换件。在这里生产效率就是一切，工伤和过劳死被视为正常的损耗，工人们通过服用合成兴奋剂来维持精力。</p></div>
+</div>
+<img class="ill fx" src="assets/img/img_03.jpg" loading="lazy">
+<div class="entry fx" id="d_农业区" data-name="农业区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">农业区<span class="tag2">LOC_025</span></div>
+<div class="entry-body"><p>由主脑管辖。整体更像一个干净无菌的生物实验室，农业区是城市的命脉。这里生产合成蛋白质肉、高密度营养膏、快速生长的转基因蔬菜和真菌，动植物非常稀少，价格昂贵，主要在黑市流通。</p></div>
+</div>
+<div class="entry fx" id="d_医疗区" data-name="医疗区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">医疗区<span class="tag2">LOC_026</span></div>
+<div class="entry-body"><p>由晚宴管辖。大概是一个巨型医院，有大量仿生人工作者和医疗舱。</p></div>
+</div>
+<div class="entry fx" id="d_能源区" data-name="能源区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">能源区<span class="tag2">LOC_027</span></div>
+<div class="entry-body"><p>由主脑管辖。收集地热和城市自身排放的生化废料进行发电。</p></div>
+</div>
+<img class="ill fx" src="assets/img/img_04.jpg" loading="lazy">
+<p class="solo fx">居住性区块</p>
+<p class="solo fx">宗教区</p>
+<div class="entry fx" id="d_教堂" data-name="教堂">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">教堂<span class="tag2">LOC_028</span></div>
+<div class="entry-body"><p>在边陲小镇镇内，主要是神职人员的居所，不计其数的天使被软禁在教堂作为人们苦难中的精神向导。</p></div>
+</div>
+<img class="ill fx" src="assets/img/img_05.jpg" loading="lazy">
+<div class="entry fx" id="d_边陲小镇" data-name="边陲小镇">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">边陲小镇<span class="tag2">LOC_029</span></div>
+<div class="entry-body"><p>一群有信仰的，思想愚昧落后的人聚居的地方，仍然保持着火刑的习惯。</p></div>
+</div>
+<div class="entry fx" id="d_花园" data-name="花园">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">花园<span class="tag2">LOC_029a</span></div>
+<div class="entry-body"><p>百仲最初只是一个普通的花店老板(人造仿真假花)，在世界混乱之前在一条巷子里开自己的花店，某天街上吵吵嚷嚷的，慢慢的开始有打砸声，然后百仲走出去看的时候被混乱的人群冲走了，他没有办法，只能被迫被卷着走，混乱中一群不速之客抓走了一批无辜的人，这些就是晚宴人体实验的第一批小白鼠。很难说在晚宴的生活是怎样一段苦难的时光，那段日子很痛苦，痛苦到感知都混乱了，灵魂在日复一日的折磨中慢慢的开始和肉体分离，经历了无数痛苦与挣扎之后百仲逃出了实验室，撑着走了很久，最后倒在边陲小镇的广场上，霎时间一座花园拔地而起，滋生出大量稀世的花草。这座，应该说是他用肉体堆出来的坟？就是花园。<span class="shard" data-id="1">◇</span></p></div>
+</div>
+<p class="solo fx">关于花园的传闻：</p>
+<p class="solo fx">没有脚的女仆，石塑外形的管家，无法捉摸的地缚灵——大概是百仲的一缕残魂。百仲在生前就是一个热爱生活喜欢花草的人，死后反而成了执念，似乎绝大多数灵魂的重量都压了下来，落在地上变成了一片花海。</p>
+<p class="solo fx">女仆日常的工作就是照料花草，她是漂浮着走的，实际的功能其实更近似于扫地机器人。百仲会出现在任何地方，在花园中心的茶桌，花房窗边的椅子，忽然出现又忽然消失，就像幻觉一样，也很符合他现在作为鬼的身份。理论上来说这里是很安全的，三位原住民并没有什么攻击性，但是花园的潜规则是不能伤害任何植被，哪怕是一颗杂草，在这里的每一步都像走钢丝，一不小心可能就再也走不出去了。</p>
+<img class="ill fx" src="assets/img/img_06.jpg" loading="lazy">
+<p class="solo fx">住宅区</p>
+<div class="entry fx" id="d_暗巷" data-name="暗巷">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">暗巷<span class="tag2">LOC_030</span></div>
+<div class="entry-body"><p>狭窄细长的一条巷子，有居民楼，有商铺，这里的人过着普通而平凡的生活。</p></div>
+</div>
+<img class="ill fx" src="assets/img/img_07.jpg" loading="lazy">
+<div class="entry fx" id="d_蜂箱" data-name="蜂箱">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">蜂箱<span class="tag2">LOC_031</span></div>
+<div class="entry-body"><p>大概是很有梦核感的地方，这里的建筑物非常高大，每个人都蜗居在四四方方的盒子里。</p></div>
+</div>
+<img class="ill fx" src="assets/img/img_08.jpg" loading="lazy">
+<div class="entry fx" id="d_地下灰色管辖区" data-name="地下灰色管辖区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">地下灰色管辖区<span class="tag2">LOC_032</span></div>
+<div class="entry-body"><p>规则和权势无法管辖的地方，谁的手都伸不到这来，这里有赌场，有黑诊所，甚至有获得重生的机会。</p></div>
+</div>
+<div class="entry fx" id="d_衍生设定" data-name="衍生设定">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">衍生设定<span class="tag2">LOC_033</span></div>
+<div class="entry-body"><p>如果需要通过赌博来创造全新生命档案则需要到地下城中找到相关人员、需要使用信用点数购买入场券后由专门人士带入，内部全是全息界面与数据光流，有单独的房间和多人使用的房间。</p></div>
+</div>
+<p class="solo fx">具体流程为玩家在桌上放上自己的人生数据片段，可以是:身份ID、记忆备份、身体改造部件，甚至情感区块，每局最多下注三项，最少一项。</p>
+<p class="solo fx">桌上中央的光骰由荷官控制，每次投掷时会生成六个随机结果:</p>
+<p class="solo fx">点数以及含义1-2数据扣除:失去下注的一-部分，或丢失随机记忆。3-4 数据重构:获得他人遗弃的身份碎片。5数据融合:随机玩家(多人)的档案暂时融合(身份与情感互换12小时)。</p>
+<p class="solo fx">单人则是被剥夺一段时间的情感</p>
+<p class="solo fx">双0 (00) 成功:彻底清除旧档案，从系统中创造新档案，相当于重生。</p>
+<div class="entry fx" id="d_意味着" data-name="意味着">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">意味着<span class="tag2">LOC_034</span></div>
+<div class="entry-body"><p>城市档案中会将你重新登记为“新市民”所有旧身份、犯罪记录、债务、肉体缺陷都会被抹去。</p></div>
+</div>
+<p class="solo fx">你得到一具全新的身体，但没人能确认，那些“创造”的人是否真的是他们自己，这全由荷官决定。</p>
+<p class="solo fx">失败后的下场</p>
+<p class="solo fx">掷出“数据扣除”者(人类)会在神经层面失去部分意识或记忆。</p>
+<h2 class="ch fx" id="c2_2">第三章 · 城外</h2>
+<div class="entry fx" id="d_城市外部分区" data-name="城市外部分区">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">城市外部分区<span class="tag2">LOC_035</span></div>
+<div class="entry-body"><p>昼半球平均温度达到400-600℃，夜半球平均温度达到-240℃，宜居带以外的人需要依赖隔温服生活，几乎所有宜居带以外的人都在尝试向城内靠近。</p></div>
+</div>
+<p class="solo fx">昼半球</p>
+<img class="ill fx" src="assets/img/img_09.jpg" loading="lazy">
+<p class="solo fx">夜半球</p>
+<img class="ill fx" src="assets/img/img_10.jpg" loading="lazy">
+<p class="solo fx">集市</p>
+<p class="solo fx">集市：城外稀稀拉拉分布着一些小的聚集地，但城外的资源很难获取，极少的资源同时也意味着更少的人口和更残酷阶级制度，这是一个弱肉强食的地方。资源少，意味着缺少淡水，缺少食物，缺少医疗设备，缺少能源动力，也缺少武器。阶级制度明确，这种地方的权力结构相当简单粗暴——谁拳头硬谁说话，意味着掌握资源更多，能力更强的那一方在这种地方将会掌握极高的话语权。在这个地方生存会相当艰难，大部分人还是只能在荒原中等死。尽管生存艰难，但仍有相当多人想去看看“里面”，因为在那里活下去的概率会大得多，至少不会被扔出去。</p>
+<p class="solo fx">集市里的人不去城里的原因有两个：</p>
+<p class="solo fx">1. 来不及。环境在短时间内突然剧变，大部分人根本来不及迁移。前期天灾相对温和，比如一场暴雨或干旱，动植物逐渐离开人类社会，但自然环境还勉强能生存。人类开始吃人造食物，日子还能过，这个阶段没有人觉得需要迁移——因为人类的本能是“还没到最坏的时候”。这充其量就是一个普通的赛博朋克废土世界。但是在这个时候，任然有一些担忧的更多，或者干脆是知道内情的人开始逐步建立安全区——这就是城内的雏形，主脑就是在这个时候被埋进城市里的。然后自然环境骤变，昼夜停止更替，温度在短时间内走向两个极端，所有人都想往宜居带跑，但已经来不及了。</p>
+<p class="solo fx">为什么他们能在天灾来临前精准的规划好城市的位置，让它刚好位于宜居带呢？首先，我想一个一个能在末日建立起来的赛博朋克都市，应该已经拥有相当发达的技术，走在更前面的人可以建立模型推算出晨昏线最后停下的位置，这就是我所说的知道内情的人。其次，最初的安全区基本上都是零散的，属于个人的庇护所，大部分人是不知情的人，他们把安全区建在他们想建立的地方，有的人运气不好，于是他们消失了。有的人运气好点，这些人组成了集市的雏形。有的人运气更好点，于是他们成为了城里的居民。还有些人是知道内情的人，他们埋下了主脑。所以说在天灾正式开始之前的，城市的雏形，远比现在大的多的多，只是在真实的灾难来临之后，留下来的就只是在宜居带上这小小的一块城市，以及周围稀稀拉拉分布的一些集市，余下的都成了坟。</p>
+<p class="solo fx">2. 进不去。这是一个更加简单粗暴的原因。不去城内是因为不想吗？是因为城内就这么大的地，只能容纳这么多人，资源就这么多。先到的人进去了，门关了，后到的人站在门外。有的死了，有的没死，在城外的边缘扎了根，形成了集市。所以集市里的人不是“没来得及迁徙的人”，而是“来了但进不去的人”。他们能看见城市，可能就在几公里之外，但他们进不去。这也给直播徒步赋予了完全不同的意味：城内的人不是在看一个陌生人从荒野走向城市，他们是在看一个被拒绝过的人再试一次，或者是在看一个从来没被拒绝过、因为从来没到过城门口的人第一次走这条路。他们下注，赌他能走多远，但所有人都知道，直播的终点不是城市，而是死亡。</p>
+<p class="solo fx">徒步装备</p>
+<p class="solo fx">徒步装备：隔温服是城外生存的基础，由于昼半球平均温度达到400-600℃而夜半球低至-240℃，宜居带以外的人必须依赖它才能存活。我们认知中的那种基础的隔温服只适用于城内，城外要面对的不只是极端温差，还有风、沙和冰。城外的隔温服是完全不同的东西，更厚、更硬，覆盖全身没有任何皮肤裸露，面罩是强制性的，因为风沙和冰晶会撕裂任何暴露的部位。面罩上嵌有护目镜，但材质必须足够厚才能抗住冲击，并且视野极度受限——使用者只能看到前方一小块区域，永远无法看清左右两侧的情况，环境，材质和厚度的原因导致这个护目镜不够高透，综合下来穿戴隔温服的人面对的是长期拥有一个狭窄并且模糊的视野，这种视觉上的狭窄本身就放大了恐惧感。风沙会持续磨损外层材料，使得隔温服的寿命有限，一套装备可能只能支撑几天到几周，取决于风力强度，这意味着城外的人必须定期回城补给，或者随身携带修补材料，走得越远，能回来的可能性就越低。</p>
+<p class="solo fx">脚上的装备同样关键，鞋子需要特殊结构来实现锚定功能。不是简单的增加重量，而是在每一步踩下时，鞋底能有某种机制嵌入地面——可能是短钉，也可能是吸附结构，具体取决于地面的材质。宜居带以外的地面并不统一，可能是岩石、沙地，也可能是冻土，或者别的更加复杂的东西，不同的地面需要不同的锚定方式。因此城外的人在出发前必须精确掌握沿途的地面情报，如果判断失误带错了鞋，就再也回不来了。为了对抗狂风，每一步都需要足够稳定，城外的徒步不再像我们认知中那种简单的在地面上行走，每一步都需要先锚定、再拔起、再迈出、再锚定，牢牢的让自己扎根在地面中，这个过程让行走变得极度缓慢而艰难，城内走一公里只需要十几分钟，在城外同样的距离可能需要耗费数小时。</p>
+<p class="solo fx">手持装备也不仅仅是支撑身体的工具，它被赋予了更多功能。这是一种外形类似登山杖，但远比登山杖强力的器械，既要防止人被强风吹走，又要承担探路任务，比如地面是否稳固，有无裂缝，是否存在温度异常的区域。杖的前端装有简易传感装置，能探测地表温度和硬度。同时它也是通讯工具，徒步小队的通讯设备需要轻便便携，在风暴中声音无法传播，没有信号塔，没有卫星，并且厚重的隔温服本身也会隔绝信号，天线藏在隔温服里信号就阻断了，伸到隔温服外面很快就会损坏，无线电在这种环境下也无法使用。所以多人行动的小队依靠杖与地面之间的物理接触传递信息，通过敲击地面产生震动信号，再从锚定鞋底的触点传入，固体传声，这是一种原始但有效的振动摩尔斯电码。当城内拥有仿生人和先进的改造手术时，城外的人却在使用这种近乎原始的方式交流，文明的倒流在这里体现得格外鲜明。</p>
+<p class="solo fx">负重是一个永远无法回避的难题。城外的人需要携带的东西太多——、食物、水、备用的隔温服和锚定鞋、探路杖，可能还有简易的临时庇护装置。但风越大，背负的东西越多，也就越容易被吹倒。因此城外装备的精简被推到了极致，每一件物品都经过反复计算，多一样是累赘，少一样则意味着死亡。</p>
+<p class="solo fx">地面条件的复杂性进一步加剧了装备选择的难度。集市的人能在城市边缘扎根，说明城市周边的部分地面至少是可以站立的，不是流沙也不是纯冰面，可能是被风化的岩石或硬化的土壤。但只要向外走，地面状况就会变得不可预测，直播徒步的人走过的二三十公里路程中，地面每隔几百米就会变化一次——这段是硬土，下一段变成碎石，再往前可能是被昼半球高温烤裂的龟裂地面，接着又是被夜半球寒气冻硬的冻土。面对这种变化，鞋子的锚定方式必须随之调整，这就要求徒步者要么携带多双不同功能的鞋子，要么拥有一双可以切换模式的装备，前者意味着负重成倍增加，后者则意味着装备复杂度上升、故障风险也随之加大。</p>
+<p class="solo fx">除此之外还有一点，长时间暴露在风暴噪音中带来的耳鸣。城外不只是危险的，它会在你身上留下痕迹。</p>
+<p class="solo fx">直播</p>
+<div class="entry fx" id="d_直播" data-name="直播">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">直播<span class="tag2">LOC_036</span></div>
+<div class="entry-body"><p>当资源开始向生存倾斜，娱乐方式十分有限时，电视台开始向城内的人转播城外的挣扎与苦难，所以举办了“徒步迁居”的直播活动。</p></div>
+</div>
+<p class="solo fx">他们认为“只有有毅力的人类可以获得再生的机会”，提出必须全程徒步，不能使用交通工具的要求。</p>
+<p class="solo fx">他们设置了地下安全区，安全区隔绝了外部极端的天气，长期备有少量生存必需的物资，在这里，你可以短暂的喘一口气，休整一下，规划接下来的战略，准备下一次徒步的工具，修复破损的器具。你不能久待，这里的资源是按照人体的极限来储备的，仅够让你在接下来的这段路上大概率不会死，停留的时间越久，下一次吃饭喝水的时间就会越晚，你就会越危险。离城市越近，安全区越稀疏，最后的那一段路比的不是毅力，而是你的身体能提供多少资源给你燃烧，所以实际上你几乎没办法真正徒步走到城内。他们甚至会故意捣毁离城市近的据点，而徒步的设备需要及时更换，稀疏的补给点意味着危险。这个直播不是真的让你能进来，只是让你在电视面前表演而已。</p>
+<p class="solo fx">徒步小队</p>
+<p class="solo fx">徒步小队：</p>
+<p class="solo fx">徒步小队不是为了表演，不是为了尊严，只是为了进城。你想活下去，你知道待在这个地方你绝对活不下去，出去徒步你大概率也活不下去——你会怎么选？哪怕只有百分之一的希望，只要你想活下去，只要那份拒绝消失的执念足够强大，你就会去拼命。</p>
+<p class="solo fx">想活着的人，不想死的人，想进城的人，就会开始徒步。没有固定的组织形式，没有人在背后召集，只是每一个不想死的人，在某个时刻做了一个决定：与其在原地等死，不如往前走。哪怕走不到。</p>
+<p class="solo fx">对于走在路上的人来说城里的人怎么看他们，其实已经不重要了。在那种活着都很困难的环境下，尊严就不存在了。你只是在走，用一双需要反复锚定才能站稳的脚，穿一件会被风沙磨破的隔温服，背一个装着全部家当的包。你知道补给点会越来越稀疏，知道离城市越近越没有活路，但你还是走。因为停下来就是死，而你的本能在拒绝消失。</p>
+<p class="solo fx">有人进城了，但非常非常少。如果有人成功进了城，他们就变成了城里的人，和所有人没有区别。没有人知道他们曾经是从城外走进来的，没有人记得他们的名字，没有人关心他们走过的路。绝大多数人死在路上，死在风暴里，死在补给点之间，死在距离城市只有几公里的地方，隔着几公里就能看见灯光，但再也走不动了。这就是徒步小队的全部故事：一群拒绝消失的人，为了百分之一的希望，走一条注定会死的路。偶尔有人走通了，但他们也不再是“城外的人”了。那百分之一的希望，从来不是给所有人的。它是用来证明这条路可以走通，好让下一个人继续走的。</p>
+</section>
+<section id="v3">
+<div class="vol-head">
+<div class="tag">// ARCHIVE_03 // DECRYPTED</div>
+<div class="vol-title"><span class="glitch" data-t="卷二 · 秩序">卷二 <span class="sep">·</span> 秩序</span></div>
+</div>
+<h2 class="ch fx" id="c3_0">第四章 · 主脑与档案</h2>
+<p class="solo fx">中央系统 / 主脑</p>
+<p class="solo fx">掌控着整个城市几乎所有关键功能的、高度集中且通常具有人工智能的巨型网络系统。</p>
+<p class="solo fx">主脑不是“放”在城市里的，主脑是“嵌”在城市里的。如果把城市比作教堂，主脑就是那座管风琴。管风琴的管道遍布整个教堂的墙壁、穹顶、地板，它和建筑本身是一体的。主脑和城市也是这样。在城市建造之初，人们就知道需要秩序，需要管理，需要一张网把所有人连在一起。所以他们一边砌墙，一边埋线；一边铺路，一边布设传感器。每一栋建筑都预留了监控接口，每一条街道都暗藏着数据节点。主脑的“神经”从地下二层的能源区出发，像根系一样向上生长，穿过地下一层的生产区，穿透地面层的暗巷，一直蔓延到地上层最顶端的娱乐区。你踩过的每一块砖，刷过的每一道门，在自动贩卖机上买过的每一管营养膏，都在往主脑的身体里输送数据。</p>
+<p class="solo fx">生命档案就是你进入这座城市的通行证。没有它，你寸步难行——你不能坐车，不能进门，不能交易，甚至连站在街角发呆都会被巡逻的仿生人拦住。这份档案不是一天建成的。最开始只是登记，留下姓名和来处，人们觉得这没什么。然后是植入芯片，为了“方便管理”，人们觉得这也可以接受。再然后，你的位置、你的行为、你的生理数据、你的每一次心跳和每一次眨眼，都被记录在案。等到你反应过来的时候，你已经离不开它了。不是不想逃，是逃不掉——因为拆掉主脑，城市就会崩溃；而离开城市，城外只有风。</p>
+<p class="solo fx">生命档案</p>
+<p class="solo fx">在这座城市中，每一个人都有一份生命数据档案，记载个人信用、身份编号、工作记录、犯罪记录，身体改造件，这份档案会记录你在这个城里活着的一切痕迹。</p>
+<p class="solo fx">仿生人</p>
+<p class="solo fx">由人工制造的、在外形、行为和思维上极度模仿真人的人造人，主要运用于警用巡逻，医疗行业等。</p>
+<p class="solo fx">医疗舱</p>
+<p class="solo fx">从出生开始，身体的某一处就镶嵌着一块轻薄的小方片，上面有一个外接通道，先进的密封和抗菌技术保障着人体的安全。有很多纳米机器人，甚至是比纳米机器人还要小的机器人，终生可以在人体里游走，扫描，体检，以及杀死细菌和病毒，严格意义上来说在这个世界里已经不存在真正的不治之症了。机器人并不是一直在身体中巡逻，更多的时候它们待在芯片里，休眠，充电，损坏的机器人也可以从外接通道中排出维修。你可以自行给机器人指令，定期给自己做体检，治疗感冒发烧这样的小病，但是如果遇到你没有把握的难题，你可以使用医疗舱。医疗舱是在医疗层集中停放的设备，集中维护、统一升级，技术迭代快，也更安全。患者躺在医疗舱内，通过外接通道连接芯片，难计其数的纳米机器人在医疗舱的指令驱动下开始在体内实时采集生理数据，分析DNA、细胞、病原体和神经信号，直接在伤口或器官上进行修复，甚至现场打印出新的组织、血管和骨骼。</p>
+<h2 class="ch fx" id="c3_1">第五章 · 势力</h2>
+<p class="solo fx">落日</p>
+<p class="solo fx">一个黑帮后代成立的公司，表面是城内最大的商业组织，实际上是黑市的组织者，天灾之初，旧的秩序刚刚崩塌，新的秩序还没来得及建立，在这个新旧秩序之间的真空期，谁掌握了资源，谁就实际把握了在城内的话语权。</p>
+<p class="solo fx">仔细看会发现落日的统治实在太薄弱了，他们管娱乐，管生产，他们管的是人，人会老，心会死，人是最不可靠的东西。最基础的民生，能源，食物，医疗，都不在他们的手上，他们控制不了主脑，也控制不了人心。他们站在这个位置，只是因为刚好在这个位置，只是因为刚好别的地方都强一点点，只要有人想反，他们很快就下来了，然后那把椅子就换一个人坐。</p>
+<img class="ill fx" src="assets/img/img_11.jpg" loading="lazy">
+<p class="solo fx">晚宴</p>
+<p class="solo fx">生物研究机构，同时管理着城内的宗教场所，比如教堂。创建者是一个心善的女士，在城外捡走没有生存能力的弃婴，通过身体机能的改造帮助弃婴适应末日灾难的自然环境，但是逐渐偏离了初心，变成了批量生产人肉战斗机器的血肉工厂。</p>
+<p class="solo fx">她看到城外的弃婴,看到他们在风沙中挣扎,看到他们一个接一个地死去。</p>
+<p class="solo fx">她想:&quot;我可以救他们。&quot;</p>
+<p class="solo fx">她想:&quot;我可以改造他们的身体,让他们适应这个世界,让他们活下去。&quot;</p>
+<p class="solo fx">最开始,她是对的，她救了第一个孩子，然后是第二个，然后是第三个。慢慢地,她忘记了为什么，她忘记了救那些可怜的孩子，她只记得改造。改造变成了目的本身，不是为了让他们活下去而改造，而是为了改造而改造。不是突然的堕落，不是被迫的妥协，而是一步一步,不知不觉。</p>
+<p class="solo fx">实际上晚宴的创始人直到死都还是认为自己在救人，这是真正的走火入魔，不是忘了，而是一直记得，只是做出来的事情已经和自己的目标相去甚远了。如果她忘了,那还有救，如果她被迫,那还有理由，但她一直记得，她一直认为自己在救人。她看着那些被改造的孩子，她看着他们痛苦，她看着他们变成怪物，她看着他们失去人性，但她还是觉得:我在救他们。不是忘记了初心，而是初心扭曲了。她的初心一直都在:救那些可怜的孩子。但救的定义变了:最开始，让他们活下去。后来，让他们变强。再后来，让他们脱离肉体凡胎。最后，让他们成为完美的改造人。她一直在救，但救已经不是救了。她一直在救人，但她救出来的,是地狱。</p>
+<img class="ill fx" src="assets/img/img_12.jpg" loading="lazy">
+<p class="solo fx">教堂</p>
+<p class="solo fx">教堂不是旧世界的遗留。它看起来像，但它的意义已经几乎脱离了原本纯粹的信仰。天灾之前或许有过真正的教堂，但那个东西早就没了。现在的教堂是晚宴的一部分，是晚宴伸出的一只手，带点权力的意味。</p>
+<p class="solo fx">天使在那个时代已经稳定了，或者说进化了又退化。它们不能再拟态，看起来就是有翅膀的人类，翅膀也不能飞，没有超能力，除了外形不一样，其他和人类一模一样。没有人知道天使的起源了，所有人都只是觉得这是长着翅膀的、外形极似普通人类的圣洁的生物，心态大概和人类喜欢看大熊猫差不多。大部分人没有把天使当人看。把天使关起来也没有太多深意，就是字面意思——人们需要什么东西来慰藉自己，只是刚好选择了天使而已。</p>
+<p class="solo fx">信仰被晚宴慢慢管束起来，但不是谁主动吞并了谁。晚宴招揽的人，那些心甘情愿给晚宴卖命的人，恰好慢慢流进了教堂，慢慢就管控了教堂。这不是计划，只是无心之举，是一种双向奔赴。</p>
+<p class="solo fx">所以教堂卖的是“意义”。他们告诉人们你的苦难是有意义的，你的痛苦会被慰藉。但教堂的人自己知道这只是谎言。真正有意义的事情在晚宴的实验室里发生——或者说，在那些普通人看不见的地方。教堂只是那个被摆在明面上的东西，一个漂亮的橱窗。人们需要慰藉，晚宴需要人心，于是教堂就站在那里，像一个从来没有人认真读过的旧时代遗迹，风吹雨打，里面早就换了主人。</p>
+<p class="solo fx">饭店</p>
+<p class="solo fx">人只能通过自己的感官来获取信息，所以总是需要一个地方坐下来吃点东西,聊聊天,交换信息。这个地方可以是酒吧,可以是茶馆,可以是任何一个人群聚集的地方，在这里，这个地方恰好是这么一家饭店。人们在这里吃饭,在这里聊天,在这里交换信息。所有需要信息的人，所有好奇的人，所有想要活下去的人，因为在这个世界里，你知道的比别人多，你就更能活下去。</p>
+<p class="solo fx">饭店的老板是一个真正意义上的疯子，她的养子是一位赏金猎人，一个恶魔，为人冷漠，但是知道的很多，大概是因为他接纳所有走在刀尖上的委托，知道那些暗流涌动，所以慢慢的，信息就集中到这儿来了。</p>
+<h2 class="ch fx" id="c3_2">第六章 · 社会运转</h2>
+<div class="entry fx" id="d_纪年法" data-name="纪年法">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">纪年法<span class="tag2">SEC_037</span></div>
+<div class="entry-body"><p>天灾之初的世界对于时间的感知非常混乱，地球停止自转,昼夜不再交替。没有&quot;白天&quot;和&quot;黑夜&quot;,人们不知道什么时候该吃饭,什么时候该睡觉,时间感在混乱中逐渐消失。最终是由落日集团敲板，找城内最好的钟表匠定做了一个绝对准确的钟，依旧按百年前24小时为一天的方法记录时间——不是为了记录时间本身,而是为了维持人类的生存节奏,提醒人们:你还是人,你需要吃饭,你需要睡觉,你需要活着。新的时代从钟表指针开始走动拉开帷幕，从此以后所有人都采用落日纪年法，365天为一个落日年</p></div>
+</div>
+<div class="entry fx" id="d_四代遗忘现象" data-name="四代遗忘现象">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">四代遗忘现象<span class="tag2">SEC_038</span></div>
+<div class="entry-body"><p>我想能源枯竭，植被衰退，物种灭绝之类的问题应该开始于更早更早之前，但是潮汐锁定是在当前时间线前一百年初见端倪，大约经过了四代人的更替，数据验证人类的社会记忆平均存续80-100年，在一百年后的今天地球上生活着的大部分人已经遗忘了自己祖辈的生活，包括食物，遍布植被的风景，秩序井然的社会，类比现实中消失的星空，我们这一代人出生开始看见的夜晚就是一片漆黑，已经很难想象上一代人口中漫天星海的夜空是什么样的了。</p><p>值得单独一提的点是世界末日后人口骤减，反而让能源枯竭这个问题变得没那么急迫了。</p></div>
+</div>
+<div class="entry fx" id="d_潮汐锁定" data-name="潮汐锁定">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">潮汐锁定<span class="tag2">SEC_039</span></div>
+<div class="entry-body"><p>这里其实是一个伪科学。潮汐锁定是一个长达几百万年甚至几亿年的漫长的过程，这边我的架空世界的设定是在百年内快速完成的，并且在这个故事背景中并没有对末日复杂的气流系统多做假设，当个纯架空来看。总之在潮汐锁定的前提下，地球的其中一面只能永远面对太阳，于是地球被分为了昼半球和夜半球，在昼夜交替的分界线上是一个狭长的宜居带，幸存的人就在这里筑起了一个狭长的城市。</p></div>
+</div>
+<div class="entry fx" id="d_宜居带的移动" data-name="宜居带的移动">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">宜居带的移动<span class="tag2">SEC_040</span></div>
+<div class="entry-body"><p>想象地球是一个苹果，用一根牙签穿过苹果，但是这根牙签不是直直插的，是歪了一点，大概歪了23度。现在桌上放着一盏台灯，这是太阳。苹果不自转了，永远同一面对着台灯，这就是潮汐锁定。面对灯的那一面永远亮，背对灯的那一面永远暗。中间那条明暗交界的线就是宜居带，但是苹果还在绕着台灯转圈。就是公转还在继续。因为牙签是歪的，所以苹果绕台灯转一圈的过程中，那条明暗交界线的位置会稍微上下移动一点。夏天的时候往北偏一点，冬天的时候往南偏一点。所以宜居带不是完全固定的，它会像一条蛇一样，在一年之中缓慢地南北晃动。幅度不大，但对于住在宜居带边缘的人来说，这个晃动可能就是生死的区别，而城市就建在这里，从赤道开始往两端延伸，这意味着往中心的区域气候更稳定，这里是靠近赤道的区域，是一个比较宽的宜居带，而越往两端宜居带越窄，这决定了往中心的区域会是富人区，而往两边就到了平民窟，这也意味着城市的两端偶尔会经历温度异常，每次来的时候边缘的居民要往城市中心方向撤一段距离。这个过程就像候鸟迁徙一样，所以他们管这个周期性的活动叫做“迁徙”。</p></div>
+</div>
+<div class="entry fx" id="d_复杂的气候环境" data-name="复杂的气候环境">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">复杂的气候环境<span class="tag2">SEC_041</span></div>
+<div class="entry-body"><p>昼半球永远被太阳烤着，地表温度极高，空气受热膨胀上升。夜半球永远没有阳光，地表温度极低，空气冷却下沉。这两边的温差是几百度，这意味着宜居带上永远有风，不是普通的风，是热空气和冷空气在交界线上剧烈碰撞产生的、永不停歇的风暴带。城市就建在这条风暴带上，本身有建筑遮挡，有防风结构，内部的人感受不到最极端的风力。但城市的边缘呢？城市外面呢？出了城就是风。不是刮一阵停一阵的风，是永远在吹的、没有尽头的风。方向大致固定——从昼半球吹向夜半球，因为热空气上升后向夜半球方向流动，冷空气从地面向昼半球方向补充，这是一个永恒的大气环流。所以城外的人面对的不只是温度问题，是你站都站不稳。风会携带昼半球的热沙和夜半球的冰晶，宜居带上的降水可能不是正常的雨，而是一种混合着沙尘和冰粒的东西。然后还有一个东西——声音，永恒的风会产生永恒的声音。城外不是安静的，城外是吵的，是一种低沉的、持续的、永远不停的呼啸声。这意味着长时间待在城外的人回来之后会有一个生理反应——耳鸣。在持续的风暴噪音中待了几天之后，突然回到相对安静的城市里，耳朵会适应不了，他们会持续听到一种不存在的嗡嗡声。老练的城外探索者可能常年有这个症状，你回来了，但你的耳朵还留在外面。住在城市边缘的人可能已经习惯了这个背景音，就像住在铁路边的人习惯了火车声，但第一次走到城市边缘的人会被这个声音吓到。这就是为什么没有人能走出去——外面什么都太多了。太热，太冷，太吵，风太大，你看不清前方，你听不见同伴的声音，你的徒步工具在风沙中被磨损，你的方向感在永恒的白昼或永恒的黑夜中消失，能挣扎的只有最靠近城区的那一小块地方的人。</p><p>再远一点的人？没有人知道，这是这个世界的物理现实。信息传不出来，人走不回来，连声音都被风吞掉了。</p><p>同时，基于恶劣的气候条件，城内的人走不出太远，信号切断了，科技在进步但是文明在倒退，他们不知道星球的另一端有什么，可能有人类，可能没有，星球的另一端，在那里的宜居带上是否还有存活的人类就成为了一个谜。</p></div>
+</div>
+<div class="entry fx" id="d_科技树" data-name="科技树">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">科技树<span class="tag2">SEC_042</span></div>
+<div class="entry-body"><p>我想这个世界观看起来可能还存在很多漏洞，比如说有这么多的时间为什么不建立更多的避难所，为什么不想更多的方法来对抗天灾。</p><p>一个很简单的原因就是做不到，一方面是能力不足，这个世界的科技水平其实是达不到真正意义上的赛博朋克城市的，很多看起来比较先进的技术，譬如人体改造，实际上都还比较粗糙，是人类面对生存危机被逼出来的，死亡率非常高。还有一方面就是这个世界的科技树点的还挺歪，像实验室已经开始研究人体改造技术，医疗舱和仿生人了，外面的黑帮还在拿最普通的热武器火并。卷三 · 种族</p></div>
+</div>
+<h2 class="ch fx" id="c3_3">第七章 · 各族起源</h2>
+<p class="solo fx">所有种族都是从人类身上长出来的。</p>
+<p class="solo fx">人类</p>
+<p class="solo fx">人类是所有种族的起点，也是唯一一个没有偏离起点的种族。他们什么都没有，所以什么都没有失去。所有种族都是从人类身上长出来的:永生族是人类许了一个愿望之后的产物;天使是看着人类、吃着人类、模仿人类之后的产物;恶魔是人类死后从尸堆里爬出来的产物;改造人是人类被打开、重组、拼装之后的产物。人类是原材料，所有种族都是人类的变体，是人类在不同方向上被扭曲、被改造、被异化之后的结果。永生族是&quot;活下去&quot;的渴望被扭曲之后的样子，天使是&quot;被理解&quot;的渴望被扭曲之后的样子，恶魔是恐惧被扭曲之后的样子，改造人是身体被扭曲之后的样子。那人类自己呢？人类是唯一一个没有被扭曲的版本，原版，没有加buff，没有被诅咒，没有被改造，没有被拟态，就是最初的、最原始的、最脆弱的那个东西。我说人类的耐力很强，这不是生理意义上的强，是一种更本质的东西——他们还在。天灾过去一百年了，潮汐锁定，文明断代，昼半球烧成了地狱，夜半球冻成了坟墓。在这种条件下，人类靠什么活着？什么都不靠，就是活着。用一具会老会死会疼会饿的肉体，在一个不适合任何生物生存的世界里，硬撑着活了一百年。没有超能力，没有特殊体质，没有任何外挂。他们建了城市，建了黑市，建了蜂箱，建了娱乐区。他们生产营养膏，他们发电，他们给自己造了一个钟来记录时间。他们甚至还有心情看城外的人受苦的直播。这不是耐力，这是一种近乎荒谬的、顽固的、拒绝消失的本能。所有从人类身上衍生出来的种族，都是人类试图超越自身局限的结果——想要永生，想要更强的身体。但这些超越无一例外都变成了诅咒。只有人类自己，什么都没超越，什么都没变异，什么都没获得。所以什么都没被诅咒。</p>
+<p class="solo fx">永生族</p>
+<p class="solo fx">永生族的故事要从一个相当久远的故事讲起</p>
+<p class="solo fx">在一个冬夜，天气非常的寒冷，有一个农户，清晨就出了远门。他走着走着，忽然发现路边有一只冻僵的丹顶鹤。农户于心不忍，想把丹顶鹤捡回去救活，走近却发现一条白蛇紧紧的缠绕在它的身上，如何都分离不开，似乎浑然一体，于是农户便一起带回了村落。农户捡回一只缠绕着蛇的丹顶鹤的事情很快这村寨里传开，村民都说这是祥瑞，神会祝福这个村寨所有的人。果不其然，丹顶鹤醒来之后便张口说话，感激农户的救命之恩，许诺可以为农户实现愿望。</p>
+<p class="solo fx">朴实的农户只希望村寨的大家可以长长久久的一起生活下去。“你的愿望会实现的。”丹顶鹤说完，便振翅离去。丹顶鹤离开后，那些将要夭折的孩子，弥留之际的老人，都奇迹般的活了下来，村子里一派祥和的气息，村民们为此修了庙宇，设立节日，举办活动，载歌载舞，以感激神明的赐福。</p>
+<p class="solo fx">但是好景不长，不久后人们便发现了，那些本该离去而被挽留下来的人，永远只能在病榻之上遭受折磨。致命的伤，要命的病，从现实上来讲本来就是不可能修复的，你的肉体仍然会自然损耗，会有越来越多无法修复的伤痕，但是你还活着，这么说其实有一些抽象，也就是说哪怕被打成了一团肉泥，哪怕只剩一具骨架，也能长长久久永生永世的活着，感受疼痛，感受虚无，感受自己的肉体七零八落最后回归大自然，你甚至可能会变成这个世界的一部分，感受到有人从你的身上踏过——你融入了这个世界，成为了这片大地的一部分，大家从你的身体上踩过，在你的身上建楼，甚至把你的一部分挖出来，移到别的地方去，没有人能听见你在无声的述说着你的痛苦。丹顶鹤食言了吗？综合来看没有，他确实实现了农户的愿望，赐予了他们祝福，祝福他们永生，让村寨里的大家长长久久的活下去，只能永生永世的被病痛折磨。</p>
+<p class="solo fx">天使</p>
+<p class="solo fx">带有翅膀的种族，被软禁在教堂作为人们苦难中的精神向导，或是被有钱人收藏展示，每一位天使都有独属于自己编号。</p>
+<p class="solo fx">它是海底爬上来的拟态怪，本体其实是类似于拟态章鱼那样触手怪，它本身就会拟态，但是最开始只是一些死物，人是要复杂很多的东西，它没有办法很快理解，所以只能吃肉，把胃中消化的柔软的触感变成它知识库的一部分，用消化来理解，用吞噬来学习，它们的知识库就是一座用血肉和骨头堆起来的图书馆。所以它们最后那副圣洁的样子，其实只是对人类最深层恐惧和向往的一种…反刍？这个词用在这里，好像格外贴切。通过胃壁感受到的柔软，和通过眼睛看到的人性，拟态出来的结果自然不会非常完美，这么一想天使多半都会有一定的性格缺陷，因为它们的人性最初都是拟态来的，而缺陷来自于他们理解的不全面，像我说的，人是很复杂的东西，这就像你吃面包，你不能通过品尝面包的味道就能了解到面包的一生。面包只能留下外形和味道，你知道面包的材料是什么吗？你知道面包是怎么制作的吗？你知道制作一个面包需要多久吗？你都不知道，因为吃面包这个行为能带给你的信息太少了。它们会渴望补全这种认知，渴望补全，那就意味着它们要不断地“进食”。为了理解爱，就去吞噬爱人；为了理解信仰，就去吞噬信徒。这么一来，它们追求完整的行为，本身就成了一种最纯粹的恶，它们越接近完美的人性，犯下的罪孽就越深重。它们最开始爬上岸的时候认知可能就像一个新生的婴儿，它看到了人类，并且想要加入他们，但是人类看见它们就四散逃跑，还会用武器攻击它们，它们最初会很困惑，但是它们有限的知识只能总结出来，他们害怕我攻击我，是因为“我”不是人类，那就去变成人类的样子，所以它们就会去搜集样本，这一些嗜血的行为都来自于它们婴儿般的天真的残忍。</p>
+<p class="solo fx">翅膀不是它们自己长出来的，而是人类附加给它们的。它们最初的拟态并不完美，总会残留一些怪物的特征，比如多余的触手或鳞片。但人类因为恐惧或崇拜，无法理解这些东西，就用自己的想象去解释——把那些丑陋的、无法名状的附庸，美化成了“翅膀”。久而久之，这种集体认知反过来影响了它们。它们在拟态时，就自动把翅膀当成了人类形态的一部分。所以，翅膀不是它们的生理结构，而是人类集体无意识的产物，一个美丽的误会。所有觉得他们是怪物的人都被吃掉变成它们的营养了，活下来的人都觉得它们是天使，历史是由幸存者书写的，而在这个世界里，幸存者恰好都是信徒。那些看到了真相、喊出怪物的人，连同他们的观点一起，都被物理消除了。所以，天使的神圣性，不是因为它们本身有多么圣洁，而是因为所有不相信它们圣洁的人，都已经成了它们身体的一部分。它们的历史，就是一本被自己吃出来的、完美无瑕的圣经。</p>
+<p class="solo fx">恶魔</p>
+<p class="solo fx">出生在秩序崩坏的新世界的新生种族，恐慌的人多了，枉死的人多了，尸体堆积如山，蔓延的恐惧与尸山与腐肉，慢慢的从中爬出来一个新生的，带着异角与异瞳的怪物。恶魔本质上和其他所有种族并没有什么区别，只是出生在不太碰巧的时间，把尸体当做孕育自己的温床，所以显得尤其不详，遭到其他种族的排挤。</p>
+<p class="solo fx">中央系统记录着城内所有居民的生命档案，但是恶魔并没有正常的出生，正常的种族是被母亲孕育下来的，他们出生自然就有了自己的档案，但是恶魔是从尸山爬出来的，他们没有自己的母亲，你能准确预测下一个恶魔从什么地方爬出来吗？不能，所以恶魔在出生到拥有自己的档案之间是有一个真空期的，这也给了有些人可乘之机，只要你够快够敏捷，你就可以在中央系统的眼皮子底下绑架走一个新生的居民。那些刚刚出生还没来得及被看见的恶魔，在还没来得及被看见的时候就是黑户，这时候某些活不下去的人，或者是专干这一行的人会铤而走险，在被中央系统发现之前带走新生的恶魔，圈养起来，然后作为食品卖给黑市的人。</p>
+<p class="solo fx">为什么选择吃恶魔而不是尸体或者别的什么？因为尸体是死掉的人，是有过档案的人，在这个城市里的每一粒尘埃都被记录着，存放在中央系统中，而新生的恶魔最大的特点就是不存在，他们没有存在在中央系统的档案中，没有人知道他们出生了，自然也不会有人知道他们死亡，中央系统记录不了的恶魔，意味着它们死了也不会有人追查，这是整个链条能运转的底层保障。圈养者不是不知道这件事违反某种道德，是他们知道这件事永远不会被追责。恶魔的肉大概并不好吃，毕竟是从腐肉里生长起来，可能本身就带着腐烂的气味，需要特殊处理才能压住那股味道，处理方式本身就是黑市里的核心技术，掌握这个技术的人定价权很高。也有人不处理直接吃，把那股腐味当成某种&quot;真实感&quot;，这类人本身就是另一种意义上的异类。但是在那种资源匮乏的时代，那也是珍惜的带着一点肉味的，有肉的质感的真正的肉，不是营养膏之类的人造食物能比拟的。应该也有极极少量的其他种族的肉，但是那要比恶魔更难抓，味道也更好吃，本来就罕见，一出现肯定就是抢手货。</p>
+<p class="solo fx">我想在那种世界里肯定也有不要命的父母因为实在想尝尝肉的滋味而吃掉孩子之类的情况，那可能就是他们的最后一顿了，当肉本身变成稀缺资源，&quot;谁算人&quot;的边界就已经在溃烂了。父母吃掉孩子不是因为他们坏，是因为这个世界已经把人逼到了那里。</p>
+<p class="solo fx">死亡或许也是恶魔繁衍的手段，它是一种中立的身份置换。杀死一个恶魔，就会继承它的一部分特征，从此游走在两个世界的边缘，所以那些圈养恶魔的人，在日复一日的铤而走险中也会渐渐变成恶魔的一员。</p>
+<p class="solo fx">改造人</p>
+<p class="solo fx">有很强的生存能力，可以适应极端天气和长期缺水缺粮的环境。但是因为身体机能被破坏，正常的走动进食等行为都会伴随剧烈的疼痛。</p>
+<p class="solo fx">①类改造人，最初被抓走的第一批小白鼠，只是一些普通的成年人，或在实验中死去，或拖着残破的身躯度过余生。</p>
+<p class="solo fx">②类改造人，晚宴在城外捡走的没有生存能力的弃婴，通过身体机能的改造适应末日灾难的自然环境。</p>
+</section>
+<section id="v4">
+<div class="vol-head">
+<div class="tag">// ARCHIVE_04 // DECRYPTED</div>
+<div class="vol-title"><span class="glitch" data-t="卷四 · 人">卷四 <span class="sep">·</span> 人</span></div>
+</div>
+<h2 class="ch fx" id="c4_0">第八章 · 人物志</h2>
+<div class="fx" style="font-family:var(--fm);font-size:11px;letter-spacing:3px;color:rgba(0,229,255,.55);margin:10px 0 26px">// ARCHIVE TERMINAL // 输入姓名查询 · 点击档案条目展开</div>
+
+<div id="arc" class="fx">
+<div id="arcMain">
+<div id="arcHome">
+<div class="ah-t">// ACCESS MODE //</div>
+<div class="ah-opt" id="ahDir"><span class="ah-key">01</span>从目录中选择<span class="ah-arr">→</span></div>
+<div class="ah-opt" id="ahSearch"><span class="ah-key">02</span>搜索人物<span class="ah-arr">→</span></div>
+</div>
+<div id="arcDir" style="display:none">
+<div class="ah-t">// INDEX // <span class="ah-back" data-b="home">← 返回</span></div>
+<div id="arcDirList"></div>
+</div>
+<div id="arcSearch" style="display:none">
+<div class="ah-t">// SEARCH // <span class="ah-back" data-b="home">← 返回</span></div>
+<div id="arcSearchBox"><span class="ps">&gt;</span><input id="arcIn" placeholder="输入姓名" autocomplete="off" spellcheck="false"><button id="arcGo">EXEC</button></div>
+<div id="arcResults"></div>
+</div>
+</div>
+<div id="arcView">
+<div id="avWarn" style="display:none">没有想要的结果？<span id="avContact">联系管理员解决</span></div>
+<div id="avHead"><span id="avName"></span><span id="avTag"></span><span class="x" id="avClose">×</span></div>
+<div id="avBody"></div>
+</div>
+</div>
+</section>
+<section id="v5">
+<div class="vol-head">
+<div class="tag">// ARCHIVE_05 // DECRYPTED</div>
+<div class="vol-title"><span class="glitch" data-t="卷五 · 散页">卷五 <span class="sep">·</span> 散页</span></div>
+</div>
+<h2 class="ch fx" id="c5_0">第九章 · 关于这个世界</h2>
+<p class="solo fx">关于记忆</p>
+<p class="solo fx">记忆是一串数据，大脑是一台电脑。这是这个世界的基本认知。记忆可以被备份，可以被交易，可以被删除，也可以被下注——地下赌场的赌桌上，记忆备份和身份ID、身体改造部件摆在一起，都是可以押上的筹码。当记忆可以被如此对待，“我是谁”就变成了一个没有标准答案的哲学问题。是肉体定义了我？是记忆定义了我？还是意识定义了我？每个人都有每个人的看法，但大多数人根本没有时间去想这个问题。他们只是活着，像一台随时可能死机的旧电脑，不知道自己的硬盘被格式化过多少次，也不知道自己还是不是出厂时的那台机器。</p>
+<p class="solo fx">关于艺术</p>
+<p class="solo fx">艺术是幸存者的特权。在一个随时可能饿死、冻死、病死、横死街头的世界里，不是每个人都有资格感受艺术。那些生存在蜂箱里的人，那些下一秒就可能被风吞掉的人，他们没有余力去画画、唱歌、跳舞。艺术属于那些足够幸运的人——有固定住所，有专长，有空闲时间。寂海就是这样的人，他有时间在巷子里变魔术，有心情为流浪儿搭一个舞台。他不是富人，他只是足够幸运。而这份幸运，他用泛滥的同情心换成了别人的幸运。如果他更适应这个社会，足够冷漠，他会过得更好，好得多。</p>
+<p class="solo fx">关于孩子</p>
+<p class="solo fx">生育是生物在灭绝前被激发的本能。永生族是个例外，那个古老的诅咒让他们生下来的孩子也不能死，而“不能死”本身就是最大的惩罚。剩下的永生族屈指可数，他们早已有了共识。但其他人还在繁育，只要有条件，就会生。不是因为希望，不是因为爱，是因为一种更深层的、写在基因里的东西：人类不想消失。新生儿存活率不高，对于社会来说，他们是未来唯一的可能；对于父母来说，他们往往是负担。但总有人在做这件事——一些站在更高处的人，一些能看见人类存续的组织，在用某种方式维持着生育率。晚宴只是其中之一，在看不见的地方，可能还有更多。在集市，那里的孩子更可怜。一个女人在那样的环境下生育，会经历什么？很多孩子诞生时就没有爱，如果没有被捡走，就只能死路一条。</p>
+<p class="solo fx">关于死亡</p>
+<p class="solo fx">在这个世界里，死比活着容易得多。如果你问想死的人要怎么做？什么都不用做。你不去拼命，自然就会死。想死的人早就死了，剩下的还拼命活着的人，都是拒绝消失的人。对于大多数人来说，死亡不是一个需要主动追求的东西，它本来就一直在那里，像空气一样无处不在。你只需要停下来，它就会接住你。</p>
+<p class="solo fx">关于爱</p>
+<p class="solo fx">我认为，爱是人类的本能，是人类区别于动物的东西。这个世界还有爱情吗？有的。还有人会恋爱吗？会的。但不是所有人都有爱的权利。不是因为它像奢侈品一样昂贵，而是因为有的人可以在一起，有的人就只能爱着，藏在心里，然后继续为了生存奔波。</p>
+<p class="solo fx">关于信仰</p>
+<p class="solo fx">这个世界里，有信仰的人信仰的都是同一个东西。如果硬要说，他们信的是基督，或者说是类似于基督的什么宗教，但具体是什么并不重要。重要的是“信仰”这个动作本身。</p>
+<p class="solo fx">边陲小镇的人是真的愚昧。他们的祖辈信，所以他们信；他们讨伐恶魔，猎巫，把和恶魔沾边的东西都称为魔女，用火刑处死。杀掉恶魔的人自己也会变成恶魔，杀来杀去，永远杀不完。他们就是那种捂着耳朵向前跑的人。如果你告诉他们恶魔和人类一样，神不存在，相信科学，他们会信吗？不会的，这就是愚昧的人——即使被告知真相，他们也不会信。他们宁可信自己的信仰，也不信真相。</p>
+<p class="solo fx">天使被软禁在教堂里，作为他们苦难中的精神向导。天使如何给人安慰？答案在天使的起源里：那些看到真相、喊出“怪物”的人，连同他们的观点一起，被物理消除了。活下来的人都觉得它们是天使。历史是由幸存者书写的，而在这个世界里，幸存者恰好都是信徒。所以天使的神圣性，不是因为它们本身有多么圣洁，而是因为所有不相信它们圣洁的人，都已经成了它们身体的一部分。</p>
+<p class="solo fx">城内的信仰和现代都市差不多。有人信，有人不信，大部分人不信。信的人也不一定是真心的，只是为了给自己一个安慰。举个例子，有的人倒霉的时候告诉自己物极必反，但是他们真的相信会反吗？不一定，只是这样能让自己舒服一点，起到一个自我安慰的作用——功利信仰，这么说比较合适。集市的情况和城内差不多，但信仰的人可能更少。在那里活着已经很困难了，没有多余的力气去信别的东西。</p>
+<p class="solo fx">那么神存在吗？存在的，这个世界里确实有超自然元素，但这不重要。它们只是存在于背景故事里，像旧世界的遗迹一样，被大多数人遗忘。可能绝大多数活在这个世界上的人，都不知道有这些东西，它们既不被需要也不指向真相，人们只是需要那么一个由头，让自己活下去，就像在荒原上点一盏灯，不管灯里面是什么，有光就行。</p>
+</section>
+<section id="v6">
+<div class="vol-head">
+<div class="tag">// ARCHIVE_06 // DECRYPTED</div>
+<div class="vol-title"><span class="glitch" data-t="卷六 · 戏言">卷六 <span class="sep">·</span> 戏言</span></div>
+</div>
+<h2 class="ch fx" id="c6_0">第十章 · 故事集</h2>
+<p class="solo fx">「旧书」</p>
+<p class="solo fx">你见过雪吗?</p>
+<p class="solo fx">踏过山川河流吗?</p>
+<p class="solo fx">有和至亲至爱的人牵手漫过步吗?</p>
+<p class="solo fx">你有被人拥抱过吗?</p>
+<p class="solo fx">寂海知道，有种东西叫星星，很久很久以前的人会在晚上看星星，他们躺在草地上，任由晚风拂过他们的脸庞，任由虫蚁漫行于肌肤之上，好痒，但是好自由。但是这都是很久很久以前的事情了，连很久以前的人都没有见过，从几十年或者几百年前起，天空就像现在一样黑乎乎的，那时候还有日月交替，有山川河流，有花鸟虫木，一切可爱的万物中星空是率先离开人类的。他的父母是很不得了的人，在离开前给自己留下了不少来自几个世纪之前的书籍。对于现在的人来说，文明已经断代了，很多来自很久以前的璀璨的，美丽的东西，全部都被掩埋在了时代的废墟中。</p>
+<p class="solo fx">寂海常觉得自己是属于几个世纪之前的人，谋生的手段不断蚕食着他的道德，思想的断代让他成为了一个无比孤独的人。</p>
+<p class="solo fx">毫无疑问他是一个心思十分细腻，感情十分丰富的人，所以当他注意到流离失所的孤儿们时，或许是他尚未泯灭的同理心作崇，或许是他恰好有一双极其灵巧的双手，在耍些小把戏上又是那样的有天赋，他自发为流浪儿们搭建了一个简陋的舞台。</p>
+<p class="solo fx">寂海并不富裕，他的所有家底都用来抚平自己无处安放的怜悯心了。</p>
+<p class="solo fx">魔术师一掀帽子，鸽子就飞出来了，一掀外套，糖果就滚落出来了，流浪儿们时不时发出惊叹，争先恐后的去抢夺滚落出来的糖果，然后又小心翼翼的把糖果收起来，珍惜这偷来的幸福。次數多了寂海便发现，有一个观众来的很频繁，但是从来不靠近他的舞台，只是远远的望着，偶尔在表演结束后跟他搭一两句话。</p>
+<p class="solo fx">他发现那个绿色的小孩今天又来了，他坐在高高远远的地方，翘着个腿望着他。</p>
+<p class="solo fx">“你叫什么名字?“寂海大声的朝他询问。</p>
+<p class="solo fx">那个小孩只是抿着嘴笑着看着他，一晃神又消失</p>
+<p class="solo fx">来去如风呢。</p>
+<p class="solo fx">表演结束后，寂海会去城市中最高的那栋楼的天台，眺望整座城市的夜景，独自一人咀嚼这难耐的孤独。</p>
+<p class="solo fx">可是显然，今天有人来的比他更早。</p>
+<p class="solo fx">一个单薄的身影站在天台的边缘，手撑在栏杆上，正背对着他。害怕打扰对方的清净，寂海刚想转身离开，那个人便转过头来，双眼直勾勾的看着他，那个眼神看的人心里发毛。双腿先于大脑做出反应，寂海就这么走到了他的身边。然后就是长久的寂静。</p>
+<p class="solo fx">正当寂海绞尽脑汁思考用什么话作为开场白时，对方开口了。</p>
+<p class="solo fx">“我以为我们已经算熟人了呢，但是我还不知道你叫什么名字。</p>
+<p class="solo fx">他的眼睛微眯起来，还是像之前那样抿着嘴笑。“还是说对于寂海先生来说我和那些满地跑的流浪儿其实没两样。</p>
+<p class="solo fx">这两句话听起来其实有些自相矛盾，但是寂海还是听懂了，对方希望本人亲自向他进行一次自我介绍。</p>
+<p class="solo fx">“我叫竹绥。</p>
+<p class="solo fx">然后竹绥就不回话了，他撑着脑袋，做思考状，任凭寂海怎么搭话都没有反应。寂海不知道为什么，此刻的寂静对自已来说是这样的煎熬，或许他的心态已经完全停留在天灾刚爆发的那一年，哪怕他现在已经二十多岁了，是一个完全的成年人了，心里却仍然住主着那个十六岁的自己，期盼着有人能读懂自己的心思，也能给孤独的魔术师一个拥抱吧。</p>
+<p class="solo fx">等寂海回过神来的时候，竹绥已经消失了，只剩他自已孤零零的立在原地。</p>
+<p class="solo fx">寂海以为这一天就这么过去了，但是等他回家准备休息睡下的时候，他听见有人在敲他家的窗户。寂海抬头一看，发现竹绥正站在他家窗户外面，眯着眼打量着他卧室里的内饰。注意到寂海看过来了，竹绥张嘴说了点什么，虽然窗户的隔音很好，但是寂海还是看懂了。</p>
+<p class="solo fx">放我进来坐坐呗。</p>
+<p class="solo fx">但是卧室的窗户是一整块的，并没有办法打开。看见寂海为难的神情，竹绥指了指客厅的方向。这不难懂，于是寂海便从床上爬了起来，走到客厅打开了门，此时竹绥就这么恰恰好出现在了门外。</p>
+<p class="solo fx">寂海很好奇这个人，比如说他是怎么找到他家的，是怎么爬上这么高这么危险的地方的，又是怎么瞬移到客厅门口的，但是他没有张口问，竹绥也没有主动开口说任何话。他背着手，走进寂海的家里，像个小领导一样绕着客厅巡视了以圈，然后龇着牙笑着看向寂海，寂海看见这样一个笑容瞬间心里一咯噔。</p>
+<p class="solo fx">真是一个美好的夜晚。</p>
+<p class="solo fx">后记:</p>
+<p class="solo fx">寂海仍然保持着他的生活习惯，白天外出谋生，夜晚给流浪儿表演魔术，表演结束后再爬上高楼的天台独自享受一会儿夜景，只是偶尔的偶尔，他会在这里遇到竹绥，对方并不会久待，仿佛只是把他当做生活的佐料，品尝一二后就会离去。今天又是属于寂海一个人的夜晚，他眺望着这个城市，看着人造天空上垂下来的密集的灯光，星星点点的铺满了整个天空。</p>
+<p class="solo fx">正当寂海大脑放空的时候，忽然听见有人叫他的名字，他便撑着栏杆探出头去。天空很黑，灯光并不能很好的照到所有地方，模模糊糊中寂海看见一个年轻的脑袋，眼睛弯成月牙状，就这么含着笑看着自己，一眨眼又消失不见。自己或许不能看透这个人，寂海觉得，竹绥是这么一个无厘头的人，像一缕清风，他吹到哪里，哪里就是春天。<span class="shard" data-id="2">◇</span></p>
+<img class="ill fx half" src="assets/img/img_16.jpg" loading="lazy"><p class="solo fx">「昼隅」</p>
+<p class="solo fx">【著】千鸢盼卿</p>
+<p class="solo fx">寂海第三次在魔术帽里摸到砂石时，指尖传来熟悉的刺痛感。</p>
+<p class="solo fx">表演场地选在废弃管道的通风口，人造晚风从格栅间漏进来,掀动他缀满补丁的斗篷下摆。</p>
+<p class="solo fx">孩子们蜷在阴影里，眼睛像散落的玻璃珠,倒映着他从帽檐抖落的彩纸——那些粗劣的仿制品在空中打转, 很快被裹挟着铁锈味的风卷走。</p>
+<p class="solo fx">他谢幕时瞥见高处晃动的身影。</p>
+<p class="solo fx">竹绥坐在悬空的导热管上，小腿随着循环广播的节拍轻晃，仿佛坐在溪边濯足的少年。</p>
+<p class="solo fx">等寂海收拾好道具箱，那截浅色裤脚已经消失在梯架后方，只留半块融化的薄荷糖压在变形的锡铁玫瑰上。</p>
+<p class="solo fx">这种馈赠带着竹绥特有的标记——甜味里掺着金属的凉，像偶然滚进齿轮间的露水，在彻底蒸发前短暂地停留。</p>
+<p class="solo fx">寂海将糖块放进铁盒，里面装着这些年来收到的零碎物件——半张烫金名片， 用紫外线笔写过字的糖纸，甚至还有一束用导线扎起来的荧光纤维。</p>
+<p class="solo fx">他始终参不透这些物件的来由，如同参不透竹绥为何总在暮色最浓时现身，衣角沾着不同区域的粉尘——有时是能源区的石墨屑，有时是农业层的泥炭灰。</p>
+<p class="solo fx">某天深夜,寂海在蓄水箱顶端找到他。</p>
+<p class="solo fx">竹绥正拆解某种精密仪器，零件在膝头铺成星河。</p>
+<p class="solo fx">“要不要做交易?”</p>
+<p class="solo fx">他头也不抬地问，镊子尖挑起一枚齿轮,</p>
+<p class="solo fx">“帮我送个消息去三号净水站,</p>
+<p class="solo fx">报酬够你买三箱压缩饼干。”</p>
+<p class="solo fx">后来这样的委托渐渐频繁。</p>
+<p class="solo fx">寂海学会不在途中打开那些密封匣，尽管指尖能感知到匣内物体的震动频率。</p>
+<p class="solo fx">有次在穿越缓冲带时，他撞见某个改造人蜷在冷凝管旁抽搐，防护服裂口露出机械脊椎与血肉的接缝处。</p>
+<p class="solo fx">寂海蹲下身想帮忙，对方却嘶哑地笑起来。</p>
+<p class="solo fx">“竹绥的信使?”</p>
+<p class="solo fx">改造人浑浊的瞳孔映出他苍白的脸,</p>
+<p class="solo fx">“告诉你家老板...上次的镇痛剂，剂量不对...”</p>
+<p class="solo fx">返程时寂海刻意绕路经过落日管辖的娱乐区。</p>
+<p class="solo fx">炫光招牌下，他看见竹绥披着绉纱西装与人谈笑,手中酒杯盛着霓虹的残影。</p>
+<p class="solo fx">当两人目光偶然相接，竹绥忽然眨了眨眼，将某物抛进喷泉池。</p>
+<p class="solo fx">等交易对象离开，寂海从池底捞起那枚金属币,背面刻着医疗区的坐标。</p>
+<p class="solo fx">这种默契逐渐长成第三只手，总在寂海表演时轻轻拉扯他的衣角。</p>
+<p class="solo fx">孩子们发现魔术师多了新把戏——他能从空钱夹里变出营养剂包装,或是让枯萎的空气凤梨重新舒展叶片。</p>
+<p class="solo fx">寂海望向天台边缘。</p>
+<p class="solo fx">竹绥正将信用点折成纸船，任它们沿着热气流飘向更深层的贫民窟。</p>
+<p class="solo fx">某种尖锐的刺痛突然扎进寂海掌心——是道具戒指的卡扣崩开了，血珠渗进镀银涂层，像雪地落下的赤梅。</p>
+<p class="solo fx">“你相信恒定不变的东西吗?”</p>
+<p class="solo fx">某次运送高辐射物料后，竹绥突然问道。</p>
+<p class="solo fx">他正用消毒棉擦拭寂海小臂的灼伤，动作轻得像在拂去古董钟的尘埃。</p>
+<p class="solo fx">寂海凝视天花板上游移的光斑，想起童年翻过的绘本里,有种叫雪的物质能在掌心停留六秒。</p>
+<p class="solo fx">答案在三个月后的能源暴动中浮现。</p>
+<p class="solo fx">当暴徒冲垮第七隔离墙时，寂海正在给孩子们发糖。骚乱中有人拽走他的魔术箱，彩色的道具撒了一地。</p>
+<p class="solo fx">他跪在狼藉中摸索，却触到一双沾满油污的短靴。竹绥站在翻倒的推车旁，手中抛接着某颗金属圆球。</p>
+<p class="solo fx">“找这个?”</p>
+<p class="solo fx">他笑得像得逞的野猫,</p>
+<p class="solo fx">“用你下个月的表演时段来换。’</p>
+<p class="solo fx">后来寂海在医疗舱醒来，发现枕边放着修复如初的魔术箱，箱底压着张光谱图——是竹绥用不同颜色的药水在纱布上绘制的星云。</p>
+<p class="solo fx">护士说送他来的少年离开前，拆除了走廊尽头的监控探头。</p>
+<p class="solo fx">此后他们再未提及那次事件。</p>
+<p class="solo fx">就像寂海不会过问竹绥颈侧新增的疤痕，竹绥也从不点破寂海在魔术中夹带的信息传递。</p>
+<p class="solo fx">某夜两人靠在散热塔顶端看人造极光，竹绥忽然哼起某支荒腔走板的童谣。</p>
+<p class="solo fx">寂海在副歌段落加入和声，音调让他想起自己早已遗忘的，关于流星的记载。</p>
+<p class="solo fx">一只鸽子扑棱着双翅掠过城市边缘，竹绥将某个冰凉物体塞进寂海口袋。</p>
+<p class="solo fx">那是块磨成骰子形状的冷凝核，六面刻着不同的气象符号。</p>
+<p class="solo fx">“下次表演的报酬。</p>
+<p class="solo fx">他翻身跃向检修梯，衣摆掀起的风里带着低温等离子体的味道。</p>
+<p class="solo fx">寂海摩挲着骰子表面的刻痕，忽然觉得这座钢铁城市变得柔软，像尚未凝固的琥珀，将所有的偶然相遇都封存在透明的纪元里。</p>
+<p class="solo fx">他打开魔术箱最深的夹层，将骰子与过去的信物放在一起。</p>
+<p class="solo fx">铁盒合拢时发出清脆的叩响，恰似夜莺啄破黎明的蛋壳。</p>
+<p class="solo fx">「大卫奥斯汀玫瑰」</p>
+<p class="solo fx">这条街道向来繁华，于夜幕降临时灯火通明,灯光渲染下是来往行人的身影，穿梭在长街带来窸窣声响，充斥人间烟火气。繁华都市的夜生活是鱼龙混杂的，寂海时常穿梭在这拥挤的人流中，被闪烁着的绚烂光线照耀在世人纸醉金迷的生活里，通往的却是与街道四周相连的漆黑小巷。那里有与城市的光鲜亮丽相违和的东西:贫穷、饥饿与落魄。胡同里住着一群流浪孩童，靠着诈骗和勒索的工作来赚钱生活。看望这群孩子，是寂海常来商业街的理由，他无聊时喜欢以魔术师的身份来到他们身边，他的魔术使孩子们着迷，面对孩童的簇拥寂海总觉得自己还年轻着。</p>
+<p class="solo fx">于是，寂海的知名度因此在街头混混之间逐渐升高，以一传十，十传百的节奏算是在这一地带出名起来。就连这片区域神出鬼没的小商贩，近些天也听闻此人的存在。商贩名为竹绥，是活跃在这里臭名昭著的黑商，他稍微打听过寂海的消息，对于有钱先生关爱流浪孩童之类的罕见八卦颇有感兴趣，他决定怀揣着好奇来会一会这个未曾谋面的男人。</p>
+<p class="solo fx">夜，夏日凉风吹拂在喧闹人群中，泛黄微光下是一片欢闹。寂海被孩童包围，灵巧的双手借灯光展现精彩绝伦的表演。周围小巷中的黑暗衬托出神秘气氛，对比小巷外大街的繁荣，寂海玄妙入神的魔术似是在泥泞中编制美好梦境。他被孩童澄澈的目光所吸引，这本不是华丽盛大的舞台，但在白鸽展翅飞舞中变得更加绝妙。寂海把魔术施展地淋漓尽致，在与群众一齐入迷于魔术时丝毫未注意到暗处寂静观察的男生。表演迎来尾声，喧闹后人群散去使人只觉意犹未尽，孤独是难耐且疯狂的，寂海独自站在原地从激情未却中缓神，耳边突觉响起脚步声。有男孩从阴暗处朝他走来，带着清脆掌声笑面相迎，寂海诧异望去眼底还残存方才的火热。</p>
+<p class="solo fx">“先生的表演很绝妙，要不要来一支玫瑰?</p>
+<p class="solo fx">在朦胧不清的灯光下竹绥递去一朵盛开的白色桔梗花，他的声音清晰纯净，轻飘飘钻进寂海耳中有些不太真实。寂海这才细细打量起眼前男孩，男孩长得一幅漂亮皮囊，眼眸似是不经意扫来就很勾人，有着很强的个人魅力。于是他开口关心眼前男孩，如同长兄:“这么晚怎么一个人?&#x27;</p>
+<p class="solo fx">“谢谢先生关心，我四处流浪已经习惯。这支大卫奧斯汀玫瑰很符合您的气质，不打算来一支结束你忙碌又浪漫的一天吗?”</p>
+<p class="solo fx">竹绥扬起笑容卖乖，似乎本性就是如此。他微微摇动手中廉价的桔梗花，这是他临时在路边采摘的，也算是用了点心思吧，毕竟这附近只有这么一朵盛开。</p>
+<p class="solo fx">“很符合我的气质?那就这支吧，多少钱?</p>
+<p class="solo fx">“它是优雅绽放的不落贵族，代表守护的爱，和先生您很般配。弄来这么一支并不容易，我也是听说您今天会来才匆忙搞到手跑来给您，一支需要一百万英镑。我很崇拜您，在我眼里配上这么一支名贵玫瑰的您并不荒唐。</p>
+<p class="solo fx">如此荒谬的交易在他们之间进行的顺利。竹绥摆了摆告别的手，微弱灯光下桔梗与玫瑰难辨，这位魔术师先生果真入了他的猎网。绅士得体?不，男人被骗的样子在他眼中是赤条条的。竹绥收敛起张扬的笑容，他期待魔术师先生发现真相的心情，可惜他看不到。他咯吱咯吱的笑声在黑夜里打破宁静，在无人处悲悯着魔术师四处泛滥的怜悯心。他突然期待起他们下次的相见,该有多么有趣。</p>
+<img class="ill fx half" src="assets/img/img_17.jpg" loading="lazy"><p class="solo fx">「重启人生」</p>
+<p class="solo fx">【著】卿言</p>
+<p class="solo fx">霓虹闪烁的不夜城，灯牌闪烁着疲惫的蓝光。</p>
+<p class="solo fx">街道浮起广告画面的残影与刺鼻的人造香水味，画面实在算不上美观但很遗憾这就是这个城市最混杂的城区。</p>
+<p class="solo fx">空气混杂着如同金属生锈的怪味，这儿的地上散落着仿生人的残躯，从旧城区穿过的小巷中有一条通道，出口是隐藏在城内的地下世界。</p>
+<p class="solo fx">这儿不如陆地上那般热闹，大多数从地面上逃亡而来到这儿的都是亡命之徒，路边随处可见的老虎机，每一次“骰声”响起，空气都震颤出细微的信号波，像在提醒来到这儿的每个人：赌注是真实的。</p>
+<p class="solo fx">没有身份码的赌徒们用着身上仅剩下的筹码去换得那万分之一的幸运概率。但结果往往过于残忍，寂海有些不记得自己有多久没合过眼休息，披着一件借来的灰大衣藏着那对显眼的翅膀好不让它暴露在路人们的眼中。</p>
+<p class="solo fx">自从中央系统扫描出他“缺乏生命档案”的那一刻起，整个城市仿佛在无数个看不见的地方被监控的彻底。</p>
+<p class="solo fx">无人机、安保、信息防火墙，全都在提示：</p>
+<p class="solo fx">「非注册个体检测到。正在派出搜查队」</p>
+<p class="solo fx">他逃了三昼夜。</p>
+<p class="solo fx">早已不记得自己是从何处逃到这奇怪的城区，全凭意志力到了一处从未见到的地方。</p>
+<p class="solo fx">好歹暂时算得上安全了吧？寂海并不想再被仿生人和机器人混合上演铁人三项般的追逃战，而且机器人下手没轻没重的....他拍着自己有些灰扑扑的衣服。</p>
+<p class="solo fx">这要是给抓到指不定得在研究室里待上一阵，他也没有给那群人上人当玩物的爱好。但现在陷入了十分糟糕的境遇，如果从这儿出去就会被仿生人们抓住,运气好一些也只是落得和自己见到的那群流浪儿一样的下场。</p>
+<p class="solo fx">他不是没见到过那些没有身份码的人、蜷缩在阴影里，破碎的残肢和义体散落在地上，一看便是改造过度、可如果有信用点数到也无妨...</p>
+<p class="solo fx">很显然，寂海需要一个能够帮助到自己隐藏种族，光明正大在地上生活的身份。</p>
+<p class="solo fx">寂海不知道自己是如何度过这狼狈的一天，身上能够自由花费的信用点并不多，除去必要的食物和水以及最便宜的汽车旅馆，剩下的零头，需要用来获取必要的信息。</p>
+<p class="solo fx">地下层的空气混着铁锈味与冷却液气息，灯管断断续续闪烁，像城市的神经在抽搐，他第一次对“遗忘”感到恐惧，这是从未有过的感觉。</p>
+<p class="solo fx">一夜无眠，直到旅馆管理员来提醒他该续客房信用后，浑浑噩噩地从并不舒服的床上起来，从随身携带的包中取出一块手表，投影扫描了管理员递来的信息，转入足够的信用点，重新躺回床上、安静的思考着。至少这些天不会露宿街头、剩下的就只能听天由命了。</p>
+<p class="solo fx">夜晚是绝佳的交易时间。</p>
+<p class="solo fx">正巧出门碰运气赚些信用点的寂海，遇上了一群人。他靠在冷凝管边，听着他们低声交谈。</p>
+<p class="solo fx">“听说了吗？那个地方还能给人制造档案呢。”</p>
+<p class="solo fx">“假的吧？上次去的那家都被主脑炸成碎片，我还想多活几年。”</p>
+<p class="solo fx">“不不不，这次见到的是完全不一样的，你想啊，主脑那玩意要的不就是一串数据，而我们这些没有数据的才会被赶出来、那东西似乎可以直接凭空创造档案！”</p>
+<p class="solo fx">“哈？老子要是能换的了档案，早在这里干什么？！来头不小啊有成功过的吗？”</p>
+<p class="solo fx">“你以为谁都能进那里面的啊，要东西的！”</p>
+<p class="solo fx">“那还不是白日做梦，走了走了.....”</p>
+<p class="solo fx">人群声渐渐远去，但他们谈的创造档案倒是有趣，他沉思着、忽然，寂海的呼吸停顿了。</p>
+<p class="solo fx">“创造”这个词，在他脑海里轻轻泛着回响。</p>
+<p class="solo fx">像是恶魔在耳边低语，如果系统否认你的存在，那就去一个能够’创造’的地方。不用担心自己的身份，可以站在地面上...</p>
+<p class="solo fx">之后的几天里，他开始在废墟区碰运气，好在总算是碰上拥有“入场券”的交易负责人，几乎花光所有的点数才换来一张轻飘飘的纸片。</p>
+<p class="solo fx">寂海不禁有些怀疑这真的是参加游戏需要的吗？</p>
+<p class="solo fx">负责人拿着对讲机说些什么，从暗处走出另一位穿着不同制服的人、将他带到一处暗巷，作势请他往里走。寂海觉得自己一直在往下走，空气变得稀薄，喘不上气。随着眼前光点变多，双脚踏入一处巨大建筑、眼前光景与废墟区完全是两个差别。<span class="shard" data-id="3">◇</span></p>
+<p class="solo fx">大厅的空气像是被代码蒸馏过，呼吸中都带着虚拟的金属味、天幕闪烁着数据库的流动灯光。</p>
+<p class="solo fx">寂海运气很“好”的被分配到了一间独立个室，撩开帘子站定后，声音从昏暗处传来，低低的，带着一点懒散的笑意。</p>
+<p class="solo fx">“……是新人吗？”</p>
+<p class="solo fx">他抬头，看见电子屏上出现这场游戏的荷官、戴着半边面具，另一只眼被头发遮住光线不算很明亮，可面具下的那双眼却有种奇异的熟悉感——</p>
+<p class="solo fx">像风掠过玻璃，像他在无数梦境里短暂瞥见的笑。</p>
+<p class="solo fx">竹绥的声音透过声纹调制器变形，却仍保留那种独有的轻盈：</p>
+<p class="solo fx">“掷骰一次，三枚数据签。你有带‘东西’来吗？”</p>
+<p class="solo fx">寂海垂下眼，语调冷静：“我没有。系统里没有我的数据。”</p>
+<p class="solo fx">“那就更有趣了。”</p>
+<p class="solo fx">竹绥俯下身，指尖在桌面划出光流。</p>
+<p class="solo fx">骰盘亮起。神经连接端口弹出，像蛇吐出的信号线。</p>
+<p class="solo fx">“——如果你赢了，中央系统会给你分配一个合法的新身份，不论种族。”</p>
+<p class="solo fx">他停顿了一下，面具后的语气忽然轻轻一转。</p>
+<p class="solo fx">“但如果你输了，你的身份档案会被抹成空白。你会从所有人的记忆里消失。”</p>
+<p class="solo fx">那双带笑的眼在电子屏里闪烁。是这场赌局的主持人，仿佛连呼吸都在他的计算中。</p>
+<p class="solo fx">“来吧，下注前，请确认您愿意承担相应的风险。”</p>
+<p class="solo fx">电子屏里的人儿抬头，只是翻开桌上的记录板。光线划过，随之对应的、寂海面前的那块电子屏亮了起来。</p>
+<p class="solo fx">上面显示着：「请将手指放在光板上」</p>
+<p class="solo fx">可寂海已经是无档案、手掌放上去的瞬间、系统闪红。</p>
+<div class="entry fx" id="d_无档案个体" data-name="无档案个体">
+<div class="entry-head" onclick="this.parentElement.classList.toggle('open')">无档案个体：风险等级A。需额外验证。<span class="tag2">SEC_043</span></div>
+<div class="entry-body"><p>电子屏里的荷官挑了挑眉、抬起眼，隔着屏幕对眼前人起了些兴趣。语气依旧温和，像在向初次来的人解释规则。</p><p>“你没有档案记录啊。下注前，需要建立一个临时身份，你可以用任何数据作筹码。”</p><p>竹绥在电子屏上写着什么。</p><p>“记忆、感情、名字，任何你能舍弃的东西，系统都能收。”</p><p>寂海坐下、手边显示着各个区块所需要的下注内容。寂海沉默片刻，手指划上光板。</p><p>第一轮，下注记忆</p><p>桌面光流骤然转红，六个转盘开始旋转，流光掠过他指尖。</p><p>竹绥一边操作，一边进行例行讲解——</p><p>“当转盘停止时，你的‘数据’将被暂时剥离并锁入系统。若结果为零，你将得到一份完整的重建身份、拥有新的档案与合法信用点。结果为奇数或者偶数，临时数据将被系统保存、不过，意识可能发生部分偏移。”</p><p>转盘启动，数码流光旋转。</p><p>「_点数2_」</p><p>寂海的意识中闪过一道光——</p><p>垂眸，眼神有片刻的空白，竹绥歪了歪头，在面具后盯着电子屏中那双被光线掠过的眼睛。</p><p>那是给流浪儿们糖果，在天台时朝他大声询问名字的人，那位好好先生。</p><p>——原来是你啊。</p><p>竹绥在收到记忆的那一刻就认出来了。</p><p>可他什么也没说 。</p><p>“输了呀，”他仍旧是那副若无其事的口气，懒懒地拨动筹码，语尾轻得像在哄人。</p><p>光从寂海颈侧滑下，映出淡色的羽纹，瞬间又被衣料遮掩。竹绥注视着寂海额前滑落的发，看到他呼吸微乱——那是记忆被抽离的征兆。下一秒，寂海抬头，眼里那一点温度，仿佛被人抽走了似的，变得陌生。</p><p>竹绥低笑：“怎么样？感觉如何？”</p><p>寂海怔怔地看他，似乎在努力辨认这张面具后的人，却什么也想不起来。竹绥靠在桌沿上，懒洋洋地抬手支着脸，修长的指尖掩去半边唇角，另一半却带着极轻的笑意。</p><p>思考与戏弄，面具下的笑无声无息。</p><p>第二轮</p><p>竹绥看着光盘流转，那些数据如同撕裂的水波。</p><p>寂海的眉头松了松——他的眼神变得冷静，如同被抽空了心跳。</p><p>竹绥轻轻呼出一口气，某种罪恶与怜悯之间挣扎、他决定这轮来点乐子，亲自下场来和对方玩玩。</p><p>这次是竹绥按下启动键，系统发出低鸣，光盘反向旋转。数据流交错，在空中生成了新的光影。</p><p>『_点数4_互换_ 』</p><p>两人的档案在瞬间交错、融化——</p><p>看起来随机到的是一部分的记忆交换。竹绥的瞳孔被光映成一片、相反寂海同样被不知何时的记忆植入。那一刻，他感到对方的记忆在自己脑中闪过：废区的夜、血迹、风声、有人用高价从他那儿买了什么，债主似乎一直在叫骂着什么。</p><p>寂海目光迷茫地对上他，很显然他对眼前只隔着一个电子屏幕的人感到了疑惑。</p><p>片段的记忆干扰着大脑，寂海不愿多说些什么生怕下一秒就会因为头晕而倒下。他花钱了的，怎么说也得站着出去。</p><p>竹绥倒是互换记忆的接受能力良好，没有任何不适、甚至还能再来一次，毫不犹豫的、他再次按下启动键。</p><p>转盘停在了「5」----封锁了一部分感官。</p><p>寂海的视觉被封锁，漂亮的紫宝石被蒙上了一层雾。</p><p>几轮过后，寂海尤其被‘记忆’给折磨的不轻，而对方像是什么事也没有。每一次赌局，都有些什么被剜去，又有些什么被塞进脑里。别人输的是钱、记忆、情感，而寂海输入的是自己。</p><p>他在慢慢变轻，像是在被这儿的风一点点吹散。他快忘记自己是为何而来的了。</p><p>“还要继续吗？”</p><p>竹绥的声音从电子屏中传来，语气一如往常的温和，听不出疲倦，也听不出怜悯。</p><p>寂海抬头。这一次是他先按下的启动键。</p><p>荷官顿了一下，似乎在笑，笑声轻到几乎被转盘声淹没</p><p>寂海不自觉地将手撑在桌上，脸也轻轻地搭在手上。他已经不确定自己还剩下多少可以用来做筹码，脑中闪过的片段都像被水一遍遍冲洗过的照片，模糊得没有温度。</p><p>寂海闭上了双眼。</p><p>光线一闪、他感觉脑内有东西坍塌，又被迅速填满。那是一种奇异的空白感，像是死亡之后又醒来的片刻宁静。</p><p>转盘渐渐减速。数字的光影在空气中闪烁。睁眼时，屏幕里显示的是</p><p>「0」</p><p>“恭喜，你是合法居民了。”</p><p>系统正在整理最后一份数据，荷官的手在操作屏上敲出确认指令。</p><p>寂海低下头，看着那张新生成的生命档案已经输入在自己随身的手表中，在托盘中发着微光。</p><p>名字，种族，住所，甚至拥有的信用点数还不少。</p><p>他抬眼想说什么，却在那一瞬对上荷官的目光。</p><p>那目光里有某种让他心头一紧的熟悉感，像梦中久违的相遇，想起灯下的舞台、魔术的碎屑、以及那位一直远在舞台的孩子，可下一秒，那些碎片又被新记忆覆盖。</p><p>“……谢谢。”</p><p>寂海轻声道，喉咙发出的声音有些难听。</p><p>面前的荷官只是微微颔首，隔着面具也看不出有什么表情，在对方将要从房间出去时，竹绥这才把变声机器关掉。</p><p>安静的房间里，连空气都像是凝固的。</p><p>所有的声音都被吞没，只剩钟表秒针的微弱滴答。就在这几乎让人忘记呼吸的寂静中——</p><p>一声突兀的掌声在空气中炸开，像石子投入平静的湖面。</p><p>“先生，您的表演精彩绝伦。”</p><p>背对着的寂海楞在原地，随后被工作人员请出了房间。门前的光线一点点暗下去。竹绥摘下面具，看着那道背影消失在光斑的尽头，低声笑了笑。</p><p>“要不要来一支玫瑰？”</p><p>「风辙」</p><p>【著】千鸢盼卿</p><p>车轮碾过那道永恒的尘线，留下两道很快就会被风沙抹去的辙痕。</p><p>改装过的旧车像一颗金属的种子，在无垠的荒原上孤独地漂泊。</p><p>寂海握着方向盘，目光落在前方那片被地质稳定器勉强维系、狭长如带的所谓公路上。</p><p>副驾上的竹缓蜷着身子，仿佛他们并非行驶在危机四伏的绝境边缘，而是在某个阳光慵懒的午后兜风。</p><p>车内很安静，只有引擎低沉的呼吸，以及竹缓指尖一枚旧硬币穿花蝴蝶般翻转的细微声响。</p><p>寂海偶尔会从后视镜里瞥一眼那片正被逐渐甩在身后的、属于“家”的人造天穹，光怪陆离的灯火在浓稠的黑暗里缩成一条闪烁的细线，最终彻底熄灭。</p><p>取而代之的，是车窗外永恒的、缺乏层次的晦暗，以及偶尔掠过视野的、旧时代废弃巨构的黑色剪影，如同史前巨兽的骸骨。</p><p>竹缓很少说话。</p><p>他有时会突然让寂海停车，然后拉开车门跳下去，站在某个陡峭的风化岩顶端，或是某段断裂的高架桥边缘，任由能剥蚀合金的风吹乱他额前柔软的发丝。</p><p>他张开手臂，背影单薄得像随时会被风带走，却又奇异地与这片死寂的荒蛮融为一体。</p><p>寂海从不询问，只是熄了火，在车里等待。</p><p>他看着那个身影，觉得竹缓不像此间囚徒，倒更像一个偶然降临、审视自己领地的、轻盈而疏离的精魂。</p><p>一次，他们途经一个已失效的“地下安全区”入口，金属闸门扭曲变形，露出后面深不见底的黑暗。</p><p>竹缓却兴致勃勃地钻了进去，片刻后带着一点沾污的灰尘和一枚锈蚀的、刻着陌生编号的金属片出来。</p><p>“纪念品。”</p><p>他把它抛给寂海，眼睛在车内昏暗的光线下弯起，里面没什么温度，却有一种孩童发现新奇玩具般的纯粹趣味。</p><p>寂海默默接过，那冰冷的触感仿佛带着旧日挣扎的余烬，他将金属片放进了口袋。</p><p>他们的补给消耗得比预期快。</p><p>在一个依托着古老岩洞形成的、简陋得几乎不能称为驿站的地方，寂海用最后一小袋信用点换取了基础营养膏。</p><p>竹缓则不知用什么方法，从一个面容枯槁的商人那里，换来了两颗真正的水果——干瘪、表皮起皱，却依旧散发着近乎奢侈的、属于阳光和泥土的微薄香气。</p><p>他把其中一颗抛给寂海。</p><p>“怎么换到的？”</p><p>寂海问，看着手里那颗过于珍贵的果实。</p><p>竹缓只是歪着头笑，用指甲在果皮上划开一道小口，凑近嗅了嗅，并不回答。</p><p>他的交易向来如此，隐秘而莫测，代价从不显露于人前。</p><p>寂海不再追问，他将果实小心地收好，像保存一个易碎的梦。</p><p>旅途的终点，是一片广袤的、理论上不应存在的冰原。</p><p>巨大的冰棱如利剑倒悬，折射着远方永恒晨曦交界处渗透过来的、稀薄而扭曲的光。</p><p>气温低得可怕，隔温服的外壳都覆上了一层白霜。</p><p>竹缓却显得异常兴奋，他几乎是跑着冲向那片纯粹的、死寂的洁白，在冰面上滑行，留下凌乱而欢快的痕迹。</p><p>他停在冰原中央，回过头，隔着十几米的距离，隔着能将声音都冻结的严寒，对寂海无声地说了句什么。</p><p>口型模糊，但寂海看懂了。</p><p>自由。</p><p>那一刻，寂海看着那个站在冰原上、仿佛要与这片极致荒凉与壮美一同凝固的身影，忽然明白了。</p><p>他所以为的陪伴，或许只是竹缓一时兴起的游历；他所以为的旅行，于对方而言，不过是一场即兴的、向着世界边缘的逃亡。</p><p>他搭建不起供这人表演的舞台，也捕捉不住这缕随心所欲的风。</p><p>返程时，竹缓睡着了，头靠着冰凉的车窗，呼吸轻浅。</p><p>寂海调高了车内的温度，将那枚锈蚀的金属片和那颗干瘪的果实，并排放进储物格里。</p><p>它们静静地躺着，如同这次旅程本身，最终将成为又一件被收藏、然后逐渐沉入记忆深处的、无用的珍宝。</p><p>车依旧在行驶，前方，那条人造的、被称为“家”的狭长光带再次浮现，像一道精致的枷锁，也越来越近。</p></div>
+</div>
+</section>
+<section id="v7">
+<div class="vol-head">
+<div class="tag">// ARCHIVE_07 // DECRYPTED</div>
+<div class="vol-title"><span class="glitch" data-t="卷末">卷末</span></div>
+</div>
+<div id="insthint">◈ SEALED ENTRY — 集齐 5 枚数据碎片以解锁</div>
+<div id="institute" class="locked">
+<p class="solo fx">白桦海研究所</p>
+<p class="solo fx">设定上是主线故事结束后很久很久以后成立的一个研究所，以上帝视角研究来自很多年前天灾刚爆发时发生的故事。所有探讨他们，写下文字，写下故事的人，都是研究员，所有写下这个世界的人，所有读过这些文字的人，所有在脑子里推演过这些角色命运的人，都在无意间成了白桦海研究所的一员。研究所不是一个地方，它是一种行为，是&quot;凝视这个世界&quot;这个动作本身。这意味着这个世界从来不是封闭的，它一直在被观测，被记录，被讨论，而每一次观测都在某种意义上影响着它的走向，这是一个低维的，开放的，一直被观测的世界，高维的人的凝视，推演，记录都会影响到这个世界。这个低维的世界一直在被高维的人，比如说你我影响，你的每一次思考可能都会成为蝴蝶效应，从这个世界的上空卷过，现在你读了，推演了，在这个世界里留下了痕迹，按这个逻辑，看过这个设定的你现在也是研究员了，它没有门槛，不需要申请，不需要资格，只需要凝视过这个世界一次，你就已经在里面了。</p>
+</div>
+</section>
+
+<footer>BIRCH SEA INSTITUTE ARCHIVE v3.0 // 生·者说 // SIGNAL END // 本站内容纯属虚构</footer>
+</main>
+</div>
+<div id="cur"></div>
+<div id="sbox"><div class="panel"><span class="x">×</span><h4 id="st"></h4><p id="sb"></p>
+<div id="sask" style="display:none"><div id="sq"></div><input id="sin" type="text" autocomplete="off"><div id="serr"></div><div id="smsg"></div></div>
+<p id="sx" style="opacity:.6;font-size:11px"></p></div></div>
+<button id="fab" title="目录">MENU</button>
+<div id="fabmenu">
+<div class="mg">— INDEX —</div>
+<a href="#v1">序 · 白桦海</a>
+<a href="#c2_0">一 · 总述与天灾</a>
+<a href="#c2_1">二 · 城市结构</a>
+<a href="#c2_2">三 · 城外</a>
+<a href="#c3_0">四 · 主脑与档案</a>
+<a href="#c3_1">五 · 势力</a>
+<a href="#c3_2">六 · 社会运转</a>
+<a href="#c3_3">七 · 各族起源</a>
+<a href="#c4_0">八 · 人物志</a>
+<a href="#c5_0">九 · 关于这个世界</a>
+<a href="#c6_0">十 · 故事集</a>
+</div>
+<div id="shardhud">DATA SHARDS <span id="shardnum">0</span> / 5</div>
+
+
+<script>
+const cv=document.getElementById('rain'),ctx=cv.getContext('2d');
+const glyphs='01アイウエオ<>/\\|+=#白桦海档案潮锁昼夜';
+let W,H,cols,drops;
+function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;cols=Math.floor(W/18);drops=Array(cols).fill(0).map(()=>Math.random()*-60);}
+rs();addEventListener('resize',rs);
+setInterval(()=>{
+ctx.fillStyle='rgba(6,8,12,.14)';ctx.fillRect(0,0,W,H);
+ctx.font='13px monospace';
+for(let i=0;i<cols;i++){
+const ch=glyphs[Math.random()*glyphs.length|0];
+ctx.fillStyle=Math.random()<.08?'#ff2d78':'#00e5ff';
+ctx.fillText(ch,i*18,drops[i]*16);
+if(drops[i]*16>H&&Math.random()>.975)drops[i]=0;else drops[i]++;
+}
+},60);
+
+const lines=[
+['ok','LINK ESTABLISHED ... NODE: BIRCH SEA INSTITUTE'],
+['ok','RECOVERING LEGACY ARCHIVE ...'],
+['ok','COLD STORAGE INTEGRITY ... PASSED'],
+['warn','SIGNAL AGE: UNKNOWN / ORIGIN: DEEP ARCHIVE'],
+['ok','CLEARANCE GRANTED ... GUEST'],
+];
+const log=document.getElementById('bootlog');
+const pct=document.getElementById('pct'),pfill=document.getElementById('pfill');
+let li=0,prog=0;
+setInterval(()=>{if(prog<82){prog+=Math.random()*.5;pct.textContent=Math.floor(prog);pfill.style.width=prog+'%';}},120);
+function type(){
+if(li>=lines.length){finish();return;}
+const[cls,txt]=lines[li];
+const d=document.createElement('div');d.className='bootline '+cls;log.appendChild(d);
+let ci=0;
+const iv=setInterval(()=>{
+d.textContent=txt.slice(0,++ci);
+if(ci>=txt.length){clearInterval(iv);li++;setTimeout(type,110);}
+},12);
+}
+function finish(){
+const iv=setInterval(()=>{
+prog=Math.min(100,prog+Math.random()*9+3);
+pct.textContent=Math.floor(prog);pfill.style.width=prog+'%';
+if(prog>=100){clearInterval(iv);
+const d=document.createElement('div');
+d.className='bootline ok';d.style.color='#fff';d.textContent='ACCESS GRANTED';
+log.appendChild(d);
+document.getElementById('flash').classList.add('go');
+setTimeout(()=>{
+document.getElementById('welc').classList.add('on');
+setTimeout(()=>document.getElementById('enter').classList.add('ready'),900);
+},450);
+}
+},60);
+}
+setTimeout(type,900);
+document.getElementById('enter').addEventListener('click',()=>{
+document.getElementById('boot').classList.add('gone');
+const bgm=document.getElementById('bgm');
+bgm.play().then(()=>{bgmBtn.classList.add('playing');bgmTxt.textContent='BGM // ON';}).catch(()=>{});
+});
+
+const bgmBtn=document.getElementById('bgmBtn'),bgm=document.getElementById('bgm'),bgmTxt=document.getElementById('bgmTxt');
+bgmBtn.addEventListener('click',()=>{
+if(bgm.paused){bgm.play();bgmBtn.classList.add('playing');bgmTxt.textContent='BGM // ON';}
+else{bgm.pause();bgmBtn.classList.remove('playing');bgmTxt.textContent='BGM // OFF';}
+});
+
+const lb=document.getElementById('lightbox'),lbImg=lb.querySelector('img');
+document.querySelectorAll('img.ill').forEach(im=>{
+im.addEventListener('click',()=>{lbImg.src=im.src;lb.classList.add('on');});
+});
+lb.addEventListener('click',()=>lb.classList.remove('on'));
+
+/* 地图pin跳转:名字匹配entry的data-name或标题文本 */
+document.querySelectorAll('.pin').forEach(p=>{
+p.addEventListener('click',()=>{
+p.classList.remove('clicked');void p.offsetWidth;p.classList.add('clicked');
+const n=p.dataset.n;
+let target=document.querySelector(`[id="d_${n}"]`)||document.querySelector(`.entry[data-name="${n}"]`);
+if(!target){
+for(const h of document.querySelectorAll('.entry-head')){
+if(h.textContent.includes(n)){target=h.parentElement;break;}
+}
+}
+if(target){
+target.classList.add('open');
+target.scrollIntoView({behavior:'smooth',block:'center'});
+target.style.borderColor='var(--cy)';
+target.style.boxShadow='0 0 34px rgba(0,229,255,.4)';
+setTimeout(()=>{target.style.borderColor='';target.style.boxShadow='';},2600);
+}
+});
+});
+
+const io=new IntersectionObserver(es=>{
+es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.fx').forEach(el=>io.observe(el));
+
+const paras=[...document.querySelectorAll('.entry-body p,.solo')];
+const pool='█▓▒░<>/\\|#@$%&';
+setInterval(()=>{
+const p=paras[Math.random()*paras.length|0];
+if(!p||p.dataset.busy)return;p.dataset.busy=1;
+const orig=p.textContent,arr=orig.split('');
+const n=Math.min(6,Math.floor(arr.length/8));const pos=new Set();
+while(pos.size<n)pos.add(Math.random()*arr.length|0);
+pos.forEach(i=>arr[i]=pool[Math.random()*pool.length|0]);
+let steps=0;
+const iv=setInterval(()=>{
+steps++;
+p.textContent=steps<3?arr.map((c,i)=>pos.has(i)&&Math.random()<.5?pool[Math.random()*pool.length|0]:c).join(''):orig;
+if(steps>=3){clearInterval(iv);delete p.dataset.busy;}
+},90);
+},7000);
+
+const links=[...document.querySelectorAll('nav a')],secs=[...document.querySelectorAll('section')],bar=document.getElementById('bar');
+addEventListener('scroll',()=>{
+let cur=secs[0];
+for(const s of secs)if(s.getBoundingClientRect().top<140)cur=s;
+links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur.id));
+const h=document.documentElement;
+bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+});
+
+
+
+(function(){
+/* 自定义光标 */
+const cur=document.getElementById('cur');
+addEventListener('mousemove',e=>{cur.style.left=(e.clientX-9)+'px';cur.style.top=(e.clientY-9)+'px';});
+addEventListener('mouseover',e=>{cur.classList.toggle('big',!!e.target.closest('a,button,.pin,.shard,.x'))});
+
+/* 悬浮目录 */
+const fab=document.getElementById('fab'),fabmenu=document.getElementById('fabmenu');
+fab.addEventListener('click',e=>{e.stopPropagation();fabmenu.classList.toggle('on');});
+fabmenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>fabmenu.classList.remove('on')));
+
+/* 全屏点击波纹 */
+document.addEventListener('click',e=>{
+const r=document.createElement('div');r.className='clickfx';r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';document.body.appendChild(r);setTimeout(()=>r.remove(),1000);
+const l=document.createElement('div');l.className='clickline';l.style.setProperty('--x',e.clientX+'px');l.style.top=e.clientY+'px';document.body.appendChild(l);setTimeout(()=>l.remove(),550);
+});
+
+/* 碎片文案 */
+const E={
+0:['FRAGMENT 01 // 竹绥','若问在这黑暗中什么最明亮？霓虹不过是黑暗的装饰品，是罪恶的掩饰衣。看这枚金灿灿的金币，哪怕在最绝望的时代，它都被人们追捧着。','—— 东里铭月'],
+1:['FRAGMENT 02 // 梦境','等到夜幕降临、星光辉辉，百仲会梦见什么？天是蔚蓝的，白云柔软，阳光正好。石质的花坛上开满了各姿的花卉。在如今这世道可无法看见这些生机勃勃、姿态各异的花卉。它们在和风之下享受着安宁，舒展衣裙嬉言欢笑，就像旧日之时，那些不再的时光。','—— 东里铭月'],
+2:['兔子先生','如果要做个总结的话，寂海是对于孩子来说像是童话一般的存在，但是离开孩子之后，不得不面对生活的，一个又幼稚又讨人厌的魔术师。',''],
+3:['忒修斯之船','你的身体，你的记忆，你的思想可能都不属于你。被改造过无数次之后的你还是你吗？从伦理上来说人们争论了这么多年，也没有一个真正意义上客观的答案。所以荷官所做的事情就是简单粗暴地下一个结论：你叫什么，你的性别是什么，你的职业是什么，这就是你。至于到底是不是真的其实并不重要，重要的是这些信息都会录给主脑——这些真真正正录进系统的文字就已经是真理了。真的要让人来定义，吵一万年也得不到答案。','你所认为的你，就是真正的你吗？'],
+4:['FRAGMENT 05 // 环带之外','星球另一端的应答器静默了四百二十一天。监听站仍每天发送三次握手信号，没有人知道还有没有谁在听。最后一任观测员在工作日志写："万一对面也在听呢。如果对面真有人——反正我值班也没别的事干。"','信号仍在发送。每天三次，大概吧。']};
+const sbox=document.getElementById('sbox'),st=document.getElementById('st'),sb=document.getElementById('sb'),sx=document.getElementById('sx');
+const sask=document.getElementById('sask'),sq=document.getElementById('sq'),sin=document.getElementById('sin'),smsg=document.getElementById('smsg'),serr=document.getElementById('serr');
+const solved3={v:false};let tries=0;
+function typeOut(txt){serr.textContent='';let i=0;
+const t=setInterval(()=>{serr.textContent=txt.slice(0,++i);if(i>=txt.length)clearInterval(t);},150);}
+sbox.querySelector('.x').addEventListener('click',()=>{sbox.classList.remove('on');tryUnlock();});
+sbox.addEventListener('click',e=>{if(e.target===sbox){sbox.classList.remove('on');tryUnlock();}});
+sin.addEventListener('keydown',ev=>{
+if(ev.key==='Enter'&&!sin.disabled){
+const v=sin.value.trim();
+if(v==='妈妈'||v==='媽媽'){smsg.textContent='妈妈是谁呢？';smsg.style.opacity=1;serr.textContent='';sin.disabled=true;solved3.v=true;}
+else if(v==='怀生'||v==='懷生'){smsg.textContent='你已经认识我了。';smsg.style.opacity=1;serr.textContent='';sin.disabled=true;solved3.v=true;}
+else{tries++;
+sbox.querySelector('.panel').classList.add('shake');setTimeout(()=>sbox.querySelector('.panel').classList.remove('shake'),400);
+sin.value='';
+if(tries<5){serr.textContent='再试'+(5-tries)+'次';}
+else{sin.disabled=true;typeOut('我不知道');}}
+}});
+
+// ===== 人物档案终端 =====
+const ARC=[
+{k:['竹绥','zhusui','zs','01'],name:'竹绥',tag:'SUBJECT_01 // MERCHANT',objs:[],img:'assets/img/img_13.jpg',txt:`<img class="avimg" src="assets/img/img_13.jpg">
+<p>他其实是这样一个不着调的商人，在大部分人的印象中，商人应该支着小摊，开个小店，再不济推个小推车也可以，而竹绥会在你焦头烂额时忽然出现在你面前，告诉你他是做买卖的商人，手上除了你需要的东西以外什么都没有。你以为他是救人于水火之中的好心人，那就错了，风浪越大鱼越贵，你越心急他的要价越高，用一个词形容就是乘人之危。</p>
+<p>竹绥这个生意是打小开始做的，在竹绥mini的时候他还会披个小披风，在上面挂点小玩意儿，也并不是每次都能精准的找到可以漫天要价的对象。最初大家看不起他，没人觉得小孩真能做上生意，在他的交易对象眼中和打发卖报儿童没什么区别，但是渐渐的竹绥就出了名，出名的原因就是黑，手心手背连着心肝都是黑的。最开始的时候竹绥还会做点正经生意，后来他发现，对比坐地起价赚来的钱平时那点钱都只能算添头，于是从此以后就不做普通买卖了。市井中充斥着谩骂声，所有被他趁火打劫过的人都说下次见面挑断他的手筋，打断他的手脚，所有人都在期待他玩脱的那一天。</p>
+<p>竹绥是一个随心所欲到极致的人，他喜欢坐在很高的地方吹风，享受这种身体高于地平线，融于风中的感觉。如果要用一个字来概况，他大概是一个很"轻"的人，举重若轻，心态豁达，生活在他身上是"没有重量的"。竹绥拥有一种化重为轻的能力，用一种超然甚至幻想的方式，去消解生活中的所有杂质，这是竹绥的生存法则，也是一种思维的流动性。</p>
+<p>从另一个层面，竹绥或许真有异于常人的特质，他这种性格上的轻巧似乎化为了实质，行踪如天空的行云，随风舒卷，自有其轨迹，试图抓住他，就像试图抓住风，最终只会从指缝间流走。<span class="shard" data-id="0">◇</span></p>`},
+{k:['凛川浔','凛','川浔','linchuanxun','lcx','姐姐','02'],name:'凛川浔',tag:'SUBJECT_02 // LADY',objs:['瓦利亚','竹绥'],img:'assets/img/img_14.jpg',txt:`<img class="avimg" src="assets/img/img_14.jpg">
+<p>凛川浔是一位无论从体能还是人脉关系上来说都非常强大的淑女，不像弟弟时常把笑容挂在脸上，凛川浔始终冷冰冰的，颇有种生人勿近的意味。她时常大张旗鼓的出入各种高级场所，穿着繁复的淑女裙，举止得体，完全看不出来是一位令人闻风丧胆的格斗大师。她是一个在这个时代非常格格不入的存在，她的身份是，淑女。淑女是一个属于旧世界的概念，它需要秩序，需要礼仪，需要一整套文明体系来支撑。没有文明就没有淑女，就像没有水就没有鱼，但凛川浔在一个文明断代的世界里，做了一条没有水的鱼。她不是在扮演淑女，她不是在怀念旧世界，她不是在用淑女这个身份来表达什么立场或者态度。她就是淑女，就像她喜欢穿淑女裙，喜欢，有能力，可以穿，裙子不会成为她的累赘，想穿就穿了，很简单的原因。她和竹绥一样，是一个漂泊的人。</p>
+<p>我把她的力量写向了一个极端，可以说是人类所能到达的顶点，只是人类的顶点，在人类之上的不可名状的存在她不是对手，但是她和弟弟一样，活在边缘，那么她这份力量就已经足够她在这个世界游刃有余的生活下去了。她有很强大的人脉关系网，在这个世界里，信息是硬通货。在早期，她和竹绥还小的时候，她和一个信息贩子搭上了线，那里是一家饭店，一家存在于末日的饭店，老板是一个女疯子，或者说疯子没有那么准确，她是一个被抽走了魂的活死人。老板是猎巫行动中的牺牲品，后来她就成了活死人，偶尔有清醒的时候，她是一个非常慈爱善良的人。至于二人怎么搭上的关系，仔细想想凛川浔的性格，她冷，她理性，她不废话，一个这样的人走进一家末日里的饭店，看到一个呆呆的活死人老板，她会怎么做？她不会好奇，她不会同情，她不会问"你怎么了"。她会观察，她会在很短的时间内判断出这个人有价值，不是因为善良，不是因为好奇，是因为她的大脑天生就在做这种计算——这个人掌握信息，信息是硬通货，这个人对我有用。然后她会坐下来，点一份东西，等。她不会主动搭话，但她会持续地来，一次，两次，十次，二十次，每次都坐同一个位置，每次都安安静静的。直到有一天，那个活死人老板在某个偶尔清醒的时刻，看到了这个每次都来、每次都安静坐着的冷冰冰的小女孩，然后她们之间就有了什么，不需要解释这个过程，它只是存在。</p>
+<p>竹绥和凛川浔是那种温暖的姐弟情，但是出于他们两个的性格，姐弟两人都非常独立。环境逼迫他们独立，他们更像两个有心灵感应的双胞胎，两个非常聪明的人，不用交流不用见面就知道对方要做什么，这就是他们的关系。</p>`},
+{k:['寂海','jihai','jh','兔子先生','兔子','魔术师','03'],name:'寂海',tag:'SUBJECT_03 // MAGICIAN',objs:['竹绥'],img:'assets/img/img_15.jpg',txt:`<img class="avimg" src="assets/img/img_15.jpg">
+<p>寂海的名字，来源于一位我很喜欢绘本作者寂地。从职业上来说他是一位欺诈师，拥有一双灵巧的手，擅长变装，如果出生在平和的年代，或许他能够成为一名出色的魔术师，一生顺遂的度过余生，可惜生不逢时，他华丽的魔术技巧不过是美丽的花瓶，他不得不面对生活，通过欺诈谋生。</p>
+<p>寂海常觉得自己是属于几个世纪之前的人，谋生的手段不断蚕食着他的道德，思想的断代让他成为了一个无比孤独的人。</p>
+<p>毫无疑问他是一个心思十分细腻，感情十分丰富的人，或许是他尚未泯灭的同理心作祟，或许是他恰好有一双极其灵巧的双手，在耍些小把戏上又是那样的有天赋，他自发为流浪儿们搭建了一个简陋的舞台。</p>
+<p>寂海擅长乔装，这是他的看家本领，妙龄少女，气质美女，大腹便便，佝偻老人，他的伪装近乎完美，却也不乏穿帮的风险。他像狼人杀里永远玩不好狼人牌的人，心态上的漏洞太过明显。</p>
+<p>"兔子先生"这个略带童趣的外号可以有很多个解读方法。1️⃣爱丽丝梦游仙境，一个总是看着怀表，匆匆忙忙，担心着会迟到的兔子，他有一个，只有在深夜才会打开的、通往另一个世界的洞。2️⃣来自寂地—《我的路》，主角v身边那位温柔，沉默，坚韧的兔子先生。寂海是一个略显幼稚的成年人，精神世界阳光的像童话，肉体却在世俗中享受苦难，画风很暖，但那种孤独感是骨子里的，成年人的童话，大概就是这种吧，看着很轻，其实每一笔都挺重的，寂海的生活可能就像一本真实的成人童话。</p>
+<p>寂海的翅膀隐藏在他最常背的那个魔术箱之中。魔术箱的结构十分简单，靠近背部的那一面开了两个洞，翅膀从这里塞进去，蜷缩着，像一只沉睡的动物。</p>
+<p>当他需要乔装的时候，会用上某种昂贵的生物科技:把翅膀脱水、压缩，收进皮肤下面的某个角落。等需要的时候再注水，让它重新活过来。这个过程对肉体负担极大，伴随剧痛和虚弱感，并且造价昂贵，所以他宁愿背着箱子。哪怕它随时可能暴露身份，哪怕它笨重、碍事、让人起疑。</p>
+<p>竹绥与寂海的初识，发生在寂海的一次魔术表演上，对于当时的寂海来说，竹绥看起来只是个再普通不过的小孩，比流浪儿穿的干净，清瘦，游离在人群之外，从来不靠近他的舞台，时间长了两人便熟络起来。对于寂海来说，他们已经是关系很好的朋友了（单方面的），竹绥是一场随性而至、捉摸不定的风暴，寂海享受着这场不可预测的"来访"，无论是多么恶劣的玩笑，这位好好先生都能全盘接下。</p>`},
+{k:['尤里安','维克托','youlian','viktor','yl','wkt','04'],name:'尤里安与维克托',tag:'SUBJECT_04 // BROTHERS',objs:['阿尔'],txt:`<p>他是某个黑帮家的次子，他的哥哥，维克托，从小就是被当成继承人培养的，尤里安说不上是被娇惯长大的，准确来说应该是放养长大的，不寄予他希望，也不给予他目光，他在这个家里就像幽灵一样的存在，被仆人跟着，一年到头都见不到爸妈一面，哪怕就在同一座宅子里——但是维克托除外。尤里安很喜欢这个哥哥，他经常站在门口从门缝里看哥哥上课，礼仪，钢琴，甚至枪，他生命里百分之九十九的时间都被无穷无尽的课程和实战排满，剩下的百分之一是给他亲爱的弟弟的。后来仇人找上门来，一把火烧了这座宅子，当时所有人都在宅子里，除了维克托和尤里安，那天是难得的空闲时间，维克托带着弟弟出来玩了，转头背后已经是一片火光。其实父母未必逃不出来，只是他们活到头了，不如就这样偷放两个小的出去生根发芽。后来维克托带着弟弟从底层摸爬滚打，真的就重新成为了这座城市里最厉害的黑帮，掌管了这片区域的话语权。维克托认识了阿尔，一个走在黑白两道的法医，尤里安对他很是好奇，跟着他学了医，可能是从小的经历影响，尤里安这人三观其实不是很正，他很残忍，草菅人命，维克托其实不太想他这么小去碰这些，特别是枪，但是有时候尤里安推开门回家的时候手上已经沾满血了，脸上还是那种玩够了的笑容。后来一次意外，也不算意外，应该和他们的父母一样是活到头了，维克托死了，阿尔带着尤里安去见他，下雨天维克托就坐在地上，头发和衣服都打湿了，很狼狈，但是他再也不会站起来了。从那以后尤里安似乎一夜之间长大了，接替了哥哥的位置。</p>`},
+{k:['阿尔','ar','al','法医','05'],name:'阿尔',tag:'SUBJECT_05 // CORONER',objs:[],txt:`<p>阿尔的故事其实有点草率，他父母双全，很正常的长大，某一天家门口来了个神神叨叨的老头，指着阿尔说要收他当徒弟，带他走，于是他爸妈就真的让老头把他带走了。老头不是什么坏人，他这个人活得很自在，到处旅行，人脉也一大把，但是没有真的教阿尔什么东西，或者说不是真的像老师一样手把手去教阿尔本事。阿尔的医术是自学的，从旅行中学的，从老头的人脉手里学的，后来老头年纪太大了，走不动了，阿尔就找了个地方定居，他自己明面上找了个法医的活——但是这个世界其实已经没多少秩序了，法医也就名头听个响，实际上九成以上他都在自己接私活，不干净，但是技术很到位，在这个过程中他认识了维克托。他给老头买了套房，老头就每天在房子里，坐在摇椅里，悠悠哉哉的享受老年人生。</p>`},
+{k:['糜撒','瓦利亚','misa','waliya','ms','wly','06'],name:'糜撒与瓦利亚',tag:'SUBJECT_06 // DEMON&KEEPER',objs:['药','竭泽'],txt:`<p>糜撒是恶魔，他本来是要被绞死的，但是瓦利亚捡到了他，她觉得这只是个孩子，她没有办法接受一群愚昧的人因为他是一只恶魔就要把这个孩子绞死，所以瓦利亚被烧死了，糜撒逃了。糜撒长大之后成为了赏金猎人，某天他做任务的时候受了伤，浑浑噩噩的在路上走，无意识的走回了他出生的地方——瓦利亚的家，在熟悉的，温暖的房子里，他放松了警惕，他倒在了这里，做了很长的梦，梦里妈妈在呼唤他，当他醒来，发现瓦利亚真的在他面前，但是疯疯癫癫的，看起来一点都不清醒。瓦利亚在捡到糜撒之前走到了很出名的一家药房门口，里面的先生叫药，不看病，只救将死之人，或者说是续命，他会给病人一只猫，等猫死了，续的这段命也就到头了。那天瓦利亚听见里面有个幽幽的声音在叫她，你带只猫走吧，你带只猫走吧，她对这个神奇的药房早有耳闻，但是她并不觉得自己需要这只猫，她委婉的拒绝了很多次，但是药房先生就像听不见一样一直在重复，所以她最后还是带走了，一只黑猫，看起来不怎么聪明，没什么灵性，这个行为其实很危险，按照传说这只猫死了有人就得死了。当天她就捡到了糜撒，没过多久她就被烧死了。糜撒醒来看见的瓦利亚脚边就有那只黑猫，但是和以前不一样了，它的眼神很清亮，看起来很有灵性，于是他带走了疯疯癫癫的瓦利亚，以及跟在身后的那只黑猫，他们开了一家饭店，没有招牌，说是饭店其实更多的是信息交易所，给需要的人准备的。某天店里来了一个金色头发的人，永生人，病恹恹的，看着就很文弱。他没点菜，观察了一会儿店里，准确来说是观察糜撒，然后找了个时机和糜撒搭话，他们两个的思路对的很齐，没聊多久这个金发男人就留在店里了——他叫竭泽，也是后来糜撒的搭档，直到糜撒死之前，竭泽一直陪在他身边给他当军师。后来，糜撒可能也是活到头了，反正他也死了，死之前他看见那只黑猫冲过来，被子弹击中，脑子忽然转了转，想到了什么，可能也没想到。糜撒死之后竭泽就消失了，瓦利亚一夜之间忽然清醒了，这事其实很简单，黑猫其实是给糜撒续命用的玩意儿，里面装的是瓦利亚的魂魄，所以糜撒看见瓦利亚的时候瓦利亚疯疯癫癫的，因为真正的瓦利亚被装在黑猫里，糜撒看见的只是一具被抽走了魂魄的躯壳。</p>`},
+{k:['撒母耳','same','主教','07'],name:'撒母耳',tag:'SUBJECT_07 // BISHOP',objs:['弗洛拉'],txt:`<p>撒母耳的故事没多复杂，他是恶魔，这个世界被歧视的那个位置，他给晚宴——也就是那个生物实验公司卖命，因为他是被公司的老板弗洛拉捡回来的。他干到高层，然后就渗进了教堂，成为了主教，从此以后整个世界的宗教都归一个生物公司管了。撒母耳是一个很复杂的人，如果从普通人的立场看，他真不算什么好人，被挂在教堂墙上展示的天使全部都是他的手笔，他们谁不想好好活着。但是同时他又建了孤儿所，收留了很多无家可归的小孩。后来他做的越来越大，管的事情越来越多，他收养的小孩慢慢长大也流进各个阶层里去了，晚宴开始感觉他管不住了，于是用他的模子复刻了一个仿生人，等撒母耳知道的时候这个仿生人已经快呱呱坠地了。他自己去了实验室，走到那个仿生人的培养舱面前把他抠了出来，然后两个人打了一架，最后同归于尽了。</p>`},
+{k:['萨拉','泽尼亚','梅子','莉莉安','简','sala','zeniya','meizi','lilian','jian','08'],name:'萨拉、泽尼亚、梅子、莉莉安与简',tag:'SUBJECT_08 // GIRLS',objs:['弗洛拉'],txt:`<p>萨拉啊，她是军人的孩子，从小就跟着父母学枪，后来世界乱了，她的父母都失踪了，就剩她一个人，在集市里面前苟活。那个时候集市里有一些孩子，她们也不知道是怎么机缘巧合出生的，在这个地方父母管不了他们，国家早就没有了，可能下一秒就会连人带包扔出去，泽尼亚就是这样的一个人。那天她带着梅子和莉莉安，三个缩在窄巷子里，像阴沟里的老鼠，这时候一个人走过来，手上抱着一堆东西，然后噼里啪啦的扔在地上，是萨拉，她问她们是想留在这里等死还是跟着她出去碰碰运气，从此以后萨拉的屁股后面就跟了三个人。途中她们遇上一个改造人，那个改造人不怎么爱说话，叫简，她是从实验室逃出来的改造人，弗洛拉的孩子，这其实是一个很危险的定时炸弹，但是他们还是收留了她，于是四个人变成了五个人一起往城里走。途中萨拉她们其实吃了很多苦，因为弗洛拉一定会来的，来把她的孩子要回去，本来这趟徒步就已经是死里求生了，再加上晚宴人为制造的困难只会更艰险。然后泽尼亚死了，梅子死了，莉莉安死了，萨拉其实很不服气，她不明白自己为什么出生就注定了要死，她也无法接受晚宴把人改造成这种人不人鬼不鬼的样子，但是最后她也死了。死之前她笑了，她想起来最后这段日子一起在晚宴的追杀中逃亡，然后人一个一个死了，最后是她没办法接纳的改造人技术让简成为了唯一的幸存者。</p>`}
+];
+
+const arcIn=document.getElementById('arcIn'),arcView=document.getElementById('arcView'),
+avName=document.getElementById('avName'),avTag=document.getElementById('avTag'),
+avBody=document.getElementById('avBody'),avClose=document.getElementById('avClose'),
+avWarn=document.getElementById('avWarn'),
+arcHome=document.getElementById('arcHome'),arcDir=document.getElementById('arcDir'),
+arcSearch=document.getElementById('arcSearch'),arcResults=document.getElementById('arcResults'),
+arcDirList=document.getElementById('arcDirList');
+const WARN='没有想要的结果？';
+function showPanel(p){
+[arcHome,arcDir,arcSearch].forEach(x=>x.style.display='none');
+p.style.display='block';}
+document.getElementById('ahDir').addEventListener('click',()=>showPanel(arcDir));
+document.getElementById('ahSearch').addEventListener('click',()=>{showPanel(arcSearch);setTimeout(()=>arcIn.focus(),100);});
+document.querySelectorAll('.ah-back').forEach(b=>b.addEventListener('click',()=>showPanel(arcHome)));
+// 目录列表
+ARC.forEach((a,i)=>{
+const it=document.createElement('div');it.className='arcitem';
+it.innerHTML='<span class="no">'+String(i+1).padStart(2,'0')+'</span>'+a.name;
+it.addEventListener('click',()=>openArc(i,false));
+arcDirList.appendChild(it);});
+
+function bindShards(){
+avBody.querySelectorAll('.shard').forEach(s=>{
+if(s.dataset.bound)return;s.dataset.bound='1';
+s.addEventListener('click',ev=>{ev.stopPropagation();
+const id=+s.dataset.id,d2=E[id];
+st.textContent=d2[0];sb.textContent=d2[1];
+sx.textContent='';sx.style.opacity='0';
+setTimeout(()=>{sx.textContent=d2[2];sx.style.opacity='.6';},1400);
+sask.style.display='none';sbox.classList.add('on');
+if(!got.has(id)){got.add(id);s.classList.add('got');s.textContent='◆';
+num.textContent=got.size;hud.classList.add('show');
+flyToHud(ev.clientX,ev.clientY);
+if(got.size>=5)pendUnlock=true;}});});}
+
+function openArc(i,warn){
+const a=ARC[i];
+document.querySelectorAll('.arcitem').forEach((x,j)=>x.classList.toggle('on',j===i));
+avName.textContent=a.name;avTag.textContent=a.tag;avBody.innerHTML=a.txt;
+avWarn.style.display=warn?'block':'none';
+arcView.classList.add('on');
+bindShards();
+setTimeout(()=>arcView.scrollIntoView({behavior:'smooth',block:'nearest'}),100);}
+
+avClose.addEventListener('click',()=>{
+arcView.classList.remove('on');
+document.querySelectorAll('.arcitem').forEach(x=>x.classList.remove('on'));});
+document.getElementById('avContact').addEventListener('click',()=>{contactPop();});
+
+// 搜索：返回 [{i, viaObj}] 主体命中优先，客体命中带标记
+function findArcs(q){
+q=q.toLowerCase();
+const subj=[],obj=[];
+ARC.forEach((a,i)=>{
+if(a.k.some(k=>k.toLowerCase()===q||k.toLowerCase().includes(q)||q.includes(k.toLowerCase()))||a.name.toLowerCase().includes(q)){subj.push(i);return;}
+if(a.objs&&a.objs.some(o=>o.toLowerCase().includes(q)||q.includes(o.toLowerCase())))obj.push(i);});
+return{subj,obj};}
+
+function renderResults(q){
+arcResults.innerHTML='';
+const{subj,obj}=findArcs(q);
+if(!subj.length&&!obj.length){
+const d=document.createElement('div');d.className='arc-none';
+d.innerHTML='<div class="an-t">// NO RECORD: "'+q+'" //</div><div class="an-w">'+WARN+'<span class="an-c" id="anContact">联系管理员解决</span></div>';
+arcResults.appendChild(d);
+d.querySelector('#anContact').addEventListener('click',()=>contactPop());
+return;}
+const mk=(i,flag)=>{
+const a=ARC[i],d=document.createElement('div');d.className='arcitem'+(flag?' via':'');
+d.innerHTML='<span class="no">'+String(i+1).padStart(2,'0')+'</span>'+a.name+(flag?'<span class="via-t">间接匹配</span>':'');
+d.addEventListener('click',()=>openArc(i,flag));
+arcResults.appendChild(d);};
+subj.forEach(i=>mk(i,false));
+obj.forEach(i=>mk(i,true));}
+
+let searching=false;
+function doSearch(){
+if(searching)return;
+const q=arcIn.value.trim();if(!q)return;
+searching=true;
+arcResults.innerHTML='';
+const sc=document.createElement('div');sc.className='arc-scan';
+sc.innerHTML='<div class="sc-bar"><div class="sc-fill"></div></div><div class="sc-t">SCANNING DATABASE<span class="sc-dots"><i>.</i><i>.</i><i>.</i></span></div>';
+arcResults.appendChild(sc);
+setTimeout(()=>{renderResults(q);searching=false;},1100);}
+arcIn.addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+document.getElementById('arcGo').addEventListener('click',doSearch);
+
+let cpopTimer=null;
+function contactPop(){
+let p=document.getElementById('cPop');
+if(!p){p=document.createElement('div');p.id='cPop';p.className='cpop';
+p.innerHTML='<div class="cp-t">// ADMIN //</div><div class="cp-b">管理员很忙，自己想办法。</div>';
+document.body.appendChild(p);}
+p.classList.remove('on');void p.offsetWidth;p.classList.add('on');
+clearTimeout(cpopTimer);
+cpopTimer=setTimeout(()=>p.classList.remove('on'),2600);}
+
+const got=new Set(),hud=document.getElementById('shardhud'),num=document.getElementById('shardnum');
+let pendUnlock=false;
+function flyToHud(x,y){
+const r=hud.getBoundingClientRect();
+if(!r.width)return;
+const dot=document.createElement('div');dot.className='flydot';dot.textContent='◆';
+dot.style.left=x+'px';dot.style.top=y+'px';document.body.appendChild(dot);
+requestAnimationFrame(()=>requestAnimationFrame(()=>{
+dot.style.left=(r.left+r.width/2)+'px';dot.style.top=(r.top+r.height/2)+'px';
+dot.style.opacity='0';dot.style.transform='scale(.4)';}));
+setTimeout(()=>dot.remove(),1100);}
+function tryUnlock(){
+if(pendUnlock&&!sbox.classList.contains('on')){
+pendUnlock=false;
+document.getElementById('institute').classList.add('unlocked');
+document.getElementById('insthint').classList.add('done');
+setTimeout(()=>document.getElementById('institute').scrollIntoView({behavior:'smooth'}),400);}}
+document.querySelectorAll('.shard').forEach(s=>{
+s.addEventListener('click',ev=>{
+ev.stopPropagation();
+const id=+s.dataset.id,d=E[id];
+st.textContent=d[0];sb.textContent=d[1];sx.textContent='';sx.style.opacity='0';
+setTimeout(()=>{sx.textContent=d[2];sx.style.opacity='.6';},1400);
+if(id===2){sask.style.display='block';sq.textContent='谁让寂海幸免于难？';
+if(!solved3.v){if(tries<5){sin.disabled=false;}sin.value='';smsg.textContent='';if(tries<5)serr.textContent='';}
+sbox.classList.add('on');if(!sin.disabled)setTimeout(()=>sin.focus(),300);}
+else{sask.style.display='none';sbox.classList.add('on');}
+if(!got.has(id)){got.add(id);s.classList.add('got');s.textContent='◆';num.textContent=got.size;hud.classList.add('show');
+flyToHud(ev.clientX,ev.clientY);
+if(got.size>=5){pendUnlock=true;}}
+});});
+})();
+</script>
+
+</body></html>
